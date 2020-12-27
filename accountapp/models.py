@@ -1,6 +1,7 @@
 from django.contrib.auth.base_user import BaseUserManager, AbstractBaseUser
 from django.db import models
 
+
 '''
     class UserManager
      - BaseUserManager를 상속받아 구현한 클래스
@@ -10,23 +11,27 @@ from django.db import models
         create_superuser    : 넘겨받은 파라미터로 super user 인스턴스 생성
 '''
 class UserManager(BaseUserManager):
-    def create_user(self, email, username, password):
+    def create_user(self, email, username, password, **extra_fields):
         if not email or not username or not password:
             raise ValueError('모든 필드값을 입력해주세요!')
 
         user = self.model(
             email = self.normalize_email(email),
-            username = username
+            username = username,
+            **extra_fields
         )
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, username, password):
+    def create_superuser(self, email, username, password, **extra_fields):
+        extra_fields.setdefault('phone_number', '00000000000')
+        extra_fields.setdefault('date_of_birth', '1900-01-01')
         user = self.create_user(
             email = self.normalize_email(email),
             username = username,
-            password = password
+            password = password,
+            **extra_fields
         )
         user.is_admin = True
         user.save(using=self._db)
@@ -44,17 +49,17 @@ class UserManager(BaseUserManager):
         is_staff            : 해당 유저가 어드민 유저인지 (return bool)
 '''
 class User(AbstractBaseUser):
-    objects = UserManager
+    objects = UserManager()
 
     email = models.EmailField(max_length=60, unique=True)
     username = models.CharField(max_length=20, unique=True)
     phone_number = models.CharField(max_length=20)
-    date_of_birth = models.DateTimeField()
+    date_of_birth = models.DateField(max_length=8)
     created_at = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
 
-    USERNAME_FIEDL = 'email'
+    USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'password']
 
     def __str__(self):
