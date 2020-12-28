@@ -4,7 +4,7 @@ from django.db import models
 
 '''
     class UserManager
-     - BaseUserManager를 상속받아 구현한 클래스
+     - BaseUserManager를 상속받아 오버라이딩한 클래스
 
      - class methods
         create_user         : 넘겨받은 파라미터로 user 인스턴스 생성

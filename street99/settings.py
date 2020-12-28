@@ -13,6 +13,8 @@ import os, environ
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+from django.urls import reverse_lazy
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
@@ -48,7 +50,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'accountapp',
-
+    'storeapp',
 ]
 
 MIDDLEWARE = [
@@ -139,3 +141,10 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [
     BASE_DIR / 'static'
 ]
+
+
+
+
+# Default Login, Logout Redirect URLs
+LOGIN_REDIRECT_URL = reverse_lazy('storeapp:index')
+LOGOUT_REDIRECT_URL = reverse_lazy('storeapp:index')
