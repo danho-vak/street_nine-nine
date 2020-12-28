@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="text-center text-dark" style="padding:10% 0 0 0;">
+        <form class="form-signin" action="{% url 'accountapp:create' %}" method="POST">
+            {% csrf_token %}
+
+            <h1 class="h3 mb-3 font-weight-normal">환영해요!</h1>
+
+
+            <label for="id_email" class="sr-only">Email</label>
+            <input type="email" name="email" id="id_email" class="form-control" placeholder="Email" required autofocus>
+
+            <label for="id_username" class="sr-only">닉네임</label>
+            <input type="text" name="username" id="id_username" class="form-control" placeholder="닉네임" required>
+
+            <label for="id_password1" class="sr-only">비밀번호</label>
+            <input type="password" name="password1" id="id_password1" class="form-control" placeholder="비밀번호" required>
+            <div style="font-size:0.6rem;">
+                {{ form.password1.help_text }}
+            </div>
+
+            <label for="id_password2" class="sr-only">비밀번호 확인</label>
+            <input type="password" name="password2" id="id_password2" class="form-control" placeholder="비밀번호 확인" required>
+            <div style="font-size:0.7rem;">
+                {{ form.password2.help_text }}
+            </div>
+
+            <label for="id_username" class="sr-only">전화번호</label>
+            <input type="text" name="phone_number" id="id_phone_number" class="form-control" placeholder="- 없이 입력" required>
+
+
+            <label for="id_username" class="sr-only">생년월일</label>
+            <input type="date" name="date_of_birth" id="id_date_of_birth" class="form-control" required>
+
+
+            <button class="btn btn-lg btn-primary btn-block mt-4" type="submit">회원가입</button>
+        </form>
+    </div>
+{% endblock %}
