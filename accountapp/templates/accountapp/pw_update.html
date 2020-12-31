@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-center" id="container_child_div">
+    <form class="form-signin" action="{% url 'accountapp:changePassword' pk=user.pk%}" method="POST">
+        {% csrf_token %}
+
+        <h1 class="h3 mb-3 text-dark font-weight-normal text-center">비밀번호는 어렵게!</h1>
+
+        <label for="id_old_password" class="sr-only">기존 비밀번호</label>
+        <input type="password"  class="form-control" name="old_password" placeholder="기존 비밀번호" autocomplete="current-password" id="id_old_password" required autofocus>
+
+        <label for="id_new_password1" class="sr-only">새로운 비밀번호</label>
+        <input type="password" class="form-control" name="new_password1" placeholder="새로운 비밀번호" autocomplete="new-password" id="id_new_password1" required>
+
+        <label for="id_new_password2" class="sr-only">새로운 비밀번호 확인</label>
+        <input type="password" class="form-control" name="new_password2" placeholder="새로운 비밀번호 확인" autocomplete="new-password" id="id_new_password2" required>
+
+        <button class="btn btn-lg btn-primary btn-block" type="submit">비밀번호 변경</button>
+    </form>
+</div>
+<div class="d-flex justify-content-center">
+        <ul>
+            <li>다른 개인 정보와 유사한 비밀번호는 사용할 수 없습니다.</li>
+            <li>비밀번호는 최소 8자 이상이어야 합니다.</li>
+            <li>통상적으로 자주 사용되는 비밀번호는 사용할 수 없습니다.</li>
+            <li>숫자로만 이루어진 비밀번호는 사용할 수 없습니다.</li>
+        </ul>
+</div>
+{% endblock %}

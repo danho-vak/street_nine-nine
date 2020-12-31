@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<table class="table table-hover">
+    <tr>
+        <td>
+            email
+        </td>
+        <td>
+            {{ target_user.email }}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            닉네임
+        </td>
+        <td>
+            {{ target_user.username }}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            전화번호
+        </td>
+        <td>
+            {{ target_user.phone_number }}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            생년월일
+        </td>
+        <td>
+            {{ target_user.date_of_birth }}
+        </td>
+    </tr>
+</table>
+<h4>등록된 배송지</h4>
+{% include 'addressapp/snippets/address_list.html' with address_list=target_user.useraddress_set.all %}
+<button class="btn btn-primary" onclick="location.href='{% url 'addressapp:create' %}'">배송지 추가하기</button>
+{% endblock %}

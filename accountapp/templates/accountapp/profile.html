@@ -1,16 +1,26 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<table class="table table-dark table-hover">
+<table class="table table-hover">
     <tr>
+        <td>
+            email
+        </td>
         <td>
             {{ target_user.email }}
         </td>
     </tr>
     <tr>
         <td>
+            닉네임
+        </td>
+        <td>
             {{ target_user.username }}
         </td>
     </tr>
 </table>
+<div>
+    <button class="btn btn-primary" onclick="location.href='{% url 'accountapp:detail' pk=user.pk %}'">상세 정보</button>
+    <button class="btn btn-warning" onclick="location.href='{% url 'accountapp:changePassword' pk=user.pk %}'">비밀번호 변경</button>
+</div>
 {% endblock %}

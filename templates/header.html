@@ -1,1 +1,8 @@
 header
+<div>
+    {% if user.is_authenticated %}
+        <h1>{{ user.username }}</h1>
+    {% else %}
+        <h3>anonymous user</h3>
+    {% endif %}
+</div>

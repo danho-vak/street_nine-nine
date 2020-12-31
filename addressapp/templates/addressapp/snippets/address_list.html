@@ -1,0 +1,21 @@
+<table class="table table-hover">
+    <tr>
+        <th>이름</th>
+        <th>주소</th>
+        <th>우편번호</th>
+    </tr>
+    {% for item in address_list %}
+        <tr>
+            <td>
+                {{ item.address_alias }}
+            </td>
+            <td>
+                {{ item.address_road_name }} (도로명)<br>
+                <small>{{ item.address_lot_number }} (지번)</small>
+            </td>
+            <td>
+                {{ item.zip_code }}
+            </td>
+        </tr>
+    {% endfor %}
+</table>
