@@ -1,7 +1,7 @@
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.views import LoginView, LogoutView
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 # Create your views here.
 from django.urls import reverse, reverse_lazy
@@ -44,12 +44,25 @@ class AccountProfileView(DetailView):
     context_object_name = 'target_user'
     template_name = 'accountapp/profile.html'
 
+    # 다른 user가 접근 못하게 설정
+    def get(self, request, *args, **kwargs):
+        if request.user == User.objects.get(pk=self.kwargs['pk']):
+            return super(AccountProfileView, self).get(request, *args, **kwargs)
+        else:
+            return redirect('storeapp:index')
+
 
 class AccountProfileDetailView(DetailView):
     model = User
     context_object_name = 'target_user'
     template_name = 'accountapp/detail.html'
 
+    # 다른 user가 접근 못하게 설정
+    def get(self, request, *args, **kwargs):
+        if request.user == User.objects.get(pk=self.kwargs['pk']):
+            return super(AccountProfileDetailView, self).get(request, *args, **kwargs)
+        else:
+            return redirect('storeapp:index')
 
 
 class AccountLoginView(LoginView):

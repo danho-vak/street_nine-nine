@@ -5,3 +5,6 @@ from django.shortcuts import render
 
 def tempview(request):
     return render(request, 'storeapp/index.html')
+
+
+
