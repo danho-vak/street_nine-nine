@@ -1,14 +1,21 @@
 from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
-from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.views import LoginView
 from django.shortcuts import render, redirect
 
 # Create your views here.
 from django.urls import reverse, reverse_lazy
+from django.utils.decorators import method_decorator
 from django.views.generic import CreateView, DetailView, FormView
 
+from accountapp.decorator import account_has_ownership
 from accountapp.forms import CustomUserCreationForm
 from accountapp.models import User
+
+
+# method_decorator로 설정할 user의 인증 여부
+USER_HAS_OWNERSHIP = [account_has_ownership, login_required]
 
 
 class AccountCreateView(CreateView):
@@ -18,6 +25,7 @@ class AccountCreateView(CreateView):
     success_url = reverse_lazy('accountapp:login')
 
 
+@method_decorator(USER_HAS_OWNERSHIP, 'dispatch')
 class AccountPWChangeView(FormView):
     model = User
     form_class = PasswordChangeForm
@@ -39,35 +47,25 @@ class AccountPWChangeView(FormView):
         return reverse('accountapp:profile', kwargs={'pk' : self.request.user.pk})
 
 
+@method_decorator(USER_HAS_OWNERSHIP, 'dispatch')
 class AccountProfileView(DetailView):
     model = User
     context_object_name = 'target_user'
     template_name = 'accountapp/profile.html'
 
-    # 다른 user가 접근 못하게 설정
-    def get(self, request, *args, **kwargs):
-        if request.user == User.objects.get(pk=self.kwargs['pk']):
-            return super(AccountProfileView, self).get(request, *args, **kwargs)
-        else:
-            return redirect('storeapp:index')
 
-
+@method_decorator(USER_HAS_OWNERSHIP, 'dispatch')
 class AccountProfileDetailView(DetailView):
     model = User
     context_object_name = 'target_user'
     template_name = 'accountapp/detail.html'
 
-    # 다른 user가 접근 못하게 설정
-    def get(self, request, *args, **kwargs):
-        if request.user == User.objects.get(pk=self.kwargs['pk']):
-            return super(AccountProfileDetailView, self).get(request, *args, **kwargs)
-        else:
-            return redirect('storeapp:index')
-
 
 class AccountLoginView(LoginView):
     template_name = 'accountapp/login.html'
 
-
-class AccountLogOutView(LogoutView):
-    pass
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:  # 이미 로그인 되어있다면
+            return redirect(request.META.get('HTTP_REFERER', '/'))
+        else:
+            return super().get(request, *args, **kwargs)
