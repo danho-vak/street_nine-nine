@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <table>
+        <tr>
+            <td>
+                <form action="" method="post">
+                    {% csrf_token %}
+                    {{ form.as_table }}
+                    <input class="btn btn-primary" type="submit" value="등록">
+                </form>
+            </td>
+        </tr>
+    </table>
+{% endblock %}

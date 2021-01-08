@@ -1,7 +1,19 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<form method="post" enctype="multipart/form-data">
     <table>
-        {{ form.as_table }}
+        <tr>
+            <td>
+                {% csrf_token %}
+                {{ forms.ProductCreationForm.as_table }}
+                {{ forms.ProductThumbnailCreationForm.as_table }}
+                {{ forms.ProductDetailImageCreationForm.as_table }}
+            </td>
+            <td>
+                <input class="btn btn-primary" type="submit" value="등록">
+            </td>
+        </tr>
     </table>
+</form>
 {% endblock %}
