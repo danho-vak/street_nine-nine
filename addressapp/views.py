@@ -12,7 +12,7 @@ from addressapp.models import UserAddress
 class AddressCreateView(CreateView):
     model = UserAddress
     form_class = AddressCreationForm
-    template_name = 'addressapp/create.html'
+    template_name = 'addressapp/product_create.html'
 
     success_url = reverse_lazy('storeapp:index')
 

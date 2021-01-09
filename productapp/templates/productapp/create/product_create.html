@@ -6,9 +6,7 @@
         <tr>
             <td>
                 {% csrf_token %}
-                {{ forms.ProductCreationForm.as_table }}
-                {{ forms.ProductThumbnailCreationForm.as_table }}
-                {{ forms.ProductDetailImageCreationForm.as_table }}
+                {{ form.as_table }}
             </td>
             <td>
                 <input class="btn btn-primary" type="submit" value="등록">

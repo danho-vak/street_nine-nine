@@ -13,8 +13,11 @@ from productapp.models import Product, ProductThumbnailImage, ProductCategory, P
 class ProductCategoryCreateView(CreateView):
     model = ProductCategory
     form_class = ProductCategoryCreationForm
-    template_name = 'productapp/category_create.html'
+    template_name = 'productapp/create/product_category_create.html'
     success_url = reverse_lazy('storeapp:index')
+
+    def form_valid(self, form):
+        return super(ProductCategoryCreateView, self).form_valid(form)
 
 
 '''
@@ -27,7 +30,7 @@ class ProductCreateView(MultiFormView):
                     'ProductThumbnailCreationForm': ProductThumbnailCreationForm,
                     'ProductDetailImageCreationForm': ProductDetailImageCreationForm
                     }
-    template_name = 'productapp/create.html'
+    template_name = 'productapp/create/product_create.html'
     success_url = reverse_lazy('storeapp:index')
 
     def forms_valid(self, forms):
