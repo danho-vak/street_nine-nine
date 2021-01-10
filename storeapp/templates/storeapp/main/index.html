@@ -1,9 +1,26 @@
 {% extends 'base.html' %}
 {% load static %}
-
+{% load imagekit %}
 {% block content %}
 
 <div class="row">
+    {% for item in product_list %}
+        <div class="col mx-4 my-4" style="max-width: 18rem;">
+            <a href="{% url 'productapp:detail' pk=item.pk %}">
+                <div class="card" style="width: 18rem;">
+                    <img src="{{ item.product_thumbnails.first.p_thumbnail.url }}" class="card-img-top">
+                    <div class="card-body">
+                        <div class="card-text text-dark">
+                            <b>{{ item.product_title }}</b>
+                        </div>
+                        <div class="text-right text-muted">{{ item.product_sale_price }}</div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    {% endfor %}
+
+<!-- 이하 더미 코드 -->
   <div class="col mx-4 my-4" style="max-width: 18rem;">
     <div class="card" style="width: 18rem;">
       <img src="{% static 'images/base/default_image.jpg' %}" class="card-img-top" alt="...">
@@ -50,7 +67,4 @@
   </div>
 
 </div>
-
-
-
 {% endblock %}

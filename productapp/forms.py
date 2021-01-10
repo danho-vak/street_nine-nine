@@ -1,5 +1,4 @@
-from django.forms import ModelForm
-
+from django.forms import ModelForm, Select
 from productapp.models import Product, ProductThumbnailImage, ProductCategory, ProductDetailImage
 
 
@@ -13,6 +12,8 @@ class ProductCreationForm(ModelForm):
     class Meta:
         model = Product
         fields = '__all__'
+        exclude = ['product_category']
+
 
 '''
     제품의 썸네일을 저장할 form
@@ -28,6 +29,7 @@ class ProductThumbnailCreationForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(ProductThumbnailCreationForm, self).__init__(*args, **kwargs)
         self.fields['p_thumbnail'].widget.attrs.update({'multiple': 'multiple'})
+
 
 '''
     제품의 상세 이미지를 저장할 form

@@ -1,10 +1,9 @@
 from django.urls import path
 
-from storeapp.views import tempview
+from storeapp.views import StoreMainList
 
 app_name = 'storeapp'
 
-
 urlpatterns = [
-    path('', tempview, name='index')
+    path('', StoreMainList.as_view(), name='index'),
 ]

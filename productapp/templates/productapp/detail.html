@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load imagekit %}
+{% block content %}
+
+<table class="table">
+    <tr>
+        <td>
+            <img src="{{ target_product.product_thumbnails.first.p_thumbnail.url }}">
+        </td>
+    </tr>
+    <tr>
+        <td>
+            {{ target_product.product_title }}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            {{ target_product.product_sale_id }}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            {{ target_product.product_origin_price }}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            {{ target_product.product_sale_price }}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            {% for detail_image in target_product.product_detail_images.all %}
+                <img src="{{ detail_image.p_detail_image.url }}">
+            {% endfor %}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            {{ target_product.product_description }}
+        </td>
+    </tr>
+</table>
+
+{% endblock %}

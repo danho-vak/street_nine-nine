@@ -1,7 +1,7 @@
 from django.db import models
 
 from imagekit.models import ProcessedImageField
-from pilkit.processors import ResizeToFill
+from pilkit.processors import Thumbnail
 
 
 class Product(models.Model):
@@ -33,9 +33,12 @@ class ProductThumbnailImage(models.Model):
                                             related_name='product_thumbnails',
                                             verbose_name='p_target_product_id')
     p_thumbnail = ProcessedImageField(upload_to='product_thumbnails',
-                                      processors=[ResizeToFill(300, 300)],
+                                      processors=[Thumbnail(300, 300)],
                                       format='JPEG',
                                       options={'quality': 60}, null=True, blank=True)
+
+    def __str__(self):
+        return str(self.p_target_product_id)
 
 '''
     제품의 상세이미지를 저장할 model
@@ -76,9 +79,8 @@ class ProductOptionChild(models.Model):
         Product와 N:1(ProductCategory) 관계로 설정
 '''
 class ProductCategory(models.Model):
-    large_category = models.CharField(max_length=20)
-    medium_category = models.CharField(max_length=20)
-    small_category = models.CharField(max_length=20)
+    category_parent = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True)  # 계층적 구조
+    category_name = models.CharField(max_length=20)
 
     def __str__(self):
-        return '{} > {} > {}'.format(self.large_category, self.medium_category, self.small_category)
+        return '{} > {}'.format(self.category_parent, self.category_name)
