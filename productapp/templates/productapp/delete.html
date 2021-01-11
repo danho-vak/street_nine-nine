@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load imagekit %}
+{% block content %}
+<div class="container">
+    <h2>주의!! 삭제하면 돌이킬수 없습니다. 한번 더 확인해주세요!</h2>
+    <div>
+        <img src="{{ target_product.product_thumbnails.first.p_thumbnail.url }}">
+    </div>
+    <div>
+        {{ target_product.product_title }}
+    </div>
+    <div>
+        {{ target_product.product_sale_id }}
+    </div>
+    <form action="{% url 'productapp:delete' pk=target_product.pk %}" method="post">
+        {% csrf_token %}
+        <button class="btn btn-secondary" onclick="history.back();">뒤로가기</button>
+        <input type="submit" class="btn btn-danger" value="삭제하기">
+    </form>
+</div>
+{% endblock %}

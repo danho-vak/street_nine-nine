@@ -1,8 +1,8 @@
 import json
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, DetailView
+from django.views.generic import CreateView, DetailView, DeleteView, UpdateView
 from multi_form_view import MultiFormView
 
 from productapp.forms import ProductCreationForm, ProductThumbnailCreationForm, ProductCategoryCreationForm, \
@@ -49,7 +49,8 @@ class ProductCreateView(MultiFormView):
 
         category_form = ProductCategoryCreationForm({'category_parent': self.request.POST.get('category_parent'),
                                                      'category_name': self.request.POST.get('category_name')})
-        if category_form.is_valid():
+
+        if category_form.is_valid():  # category form 유효성 체크
             category = category_form.save()
 
             product.product_category = category
@@ -72,7 +73,41 @@ class ProductCreateView(MultiFormView):
         return super(ProductCreateView, self).forms_valid(forms)
 
 
+'''
+    상품 상세페이지 view
+'''
 class ProductDetailView(DetailView):
     model = Product
     context_object_name = 'target_product'
     template_name = 'productapp/detail.html'
+
+
+'''
+    상품을 삭제하는 view
+     - 해당 상품의 썸네일, 이미지를 삭제하기 위해 post()를 오버라이딩 함
+'''
+class ProductDeleteView(DeleteView):
+    model = Product
+    context_object_name = 'target_product'
+    template_name = 'productapp/delete.html'
+    success_url = reverse_lazy('storeapp:index')
+
+    def post(self, request, *args, **kwargs):
+        product = self.get_object()
+        thumbnail_list = product.product_thumbnails.all()  # product_thumbnails는 ProductThumbnailImage 모델의 realeted_name
+        detail_image_list = product.product_detail_images.all()  # product_detail_images는 ProductDetailImage 모델의 realeted_name
+
+        for thumbnail in thumbnail_list:
+            thumbnail.p_thumbnail.delete()
+
+        for detail_image in detail_image_list:
+            detail_image.p_detail_image.delete()
+
+        return super(ProductDeleteView, self).post(request, *args, **kwargs)
+
+
+'''
+    상품의 정보를 수정하는 view
+'''
+class ProductUpdateView(UpdateView):
+    pass
