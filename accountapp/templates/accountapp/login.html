@@ -10,7 +10,7 @@
         <label for="id_password" class="sr-only">Password</label>
         <input type="password" name="password" id="id_password" class="form-control" placeholder="Password" required>
         <button class="btn btn-lg btn-primary btn-block" type="submit">로그인</button>
-        <button class="btn btn-lg btn-primary btn-block" type="button" onclick="#">회원가입</button>
+        <button class="btn btn-lg btn-primary btn-block" type="button" onclick="location.href='{% url 'accountapp:create' %}'">회원가입</button>
     </form>
 </div>
 

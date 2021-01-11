@@ -1,7 +1,10 @@
+from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render
 
 # Create your views here.
 from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView
 from django.views.generic.edit import FormMixin
 
@@ -9,21 +12,39 @@ from addressapp.forms import AddressCreationForm
 from addressapp.models import UserAddress
 
 
+@method_decorator(login_required, 'dispatch')
 class AddressCreateView(CreateView):
     model = UserAddress
     form_class = AddressCreationForm
-    template_name = 'addressapp/product_create.html'
+    template_name = 'addressapp/create.html'
 
-    success_url = reverse_lazy('storeapp:index')
+    success_url = reverse_lazy('addressapp:list')
 
     def form_valid(self, form):
         new_item = form.save(commit=False)
         new_item.target_user = self.request.user
+        new_item.is_default = self.set_default_address()  # 아래 set_default_address()에서 반환된 bool값을 저장
         new_item.save()
 
         return super().form_valid(form)
 
+    def set_default_address(self):
+        # 기존에 기본 주소로 설정되어 있는 레코드 탐색
+        before_object = UserAddress.objects.filter(target_user=self.request.user, is_default=True)
 
+        if before_object:  # 탐색된 레코드가 있다면
+            if self.request.POST.get('is_default', None) == 'checked':  # 기본 주소 설정 체크박스가 체크되었다면
+                before_object.update(is_default=False)  # 해당 레코드의 기본 주소 설정 값을 False로 변경하고 True 반환
+                return True
+            else:
+                return False
+        else:
+            return True  # 탐색된 레코드가 없다면(최초 등록의 경우) True 반환
+
+
+
+
+@method_decorator(login_required, 'dispatch')
 class AddressListView(ListView, FormMixin):
     template_name = 'addressapp/list.html'
     context_object_name = 'address_list'
@@ -33,10 +54,10 @@ class AddressListView(ListView, FormMixin):
         return UserAddress.objects.filter(target_user=self.request.user)
 
 
+# 주소를 수정하는 로직 말고 주소의 기본값 설정을 바꾸는 쪽으로 생각해보자
 class AddressUpdateView(UpdateView):
     model = UserAddress
     pass
-
 
 class AddressDeleteView(DeleteView):
     model = UserAddress

@@ -1,18 +1,26 @@
 import json
 
-from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
 from django.views.generic import CreateView, DetailView, DeleteView, UpdateView
 from multi_form_view import MultiFormView
 
+from productapp.decorator import user_is_admin
 from productapp.forms import ProductCreationForm, ProductThumbnailCreationForm, ProductCategoryCreationForm, \
     ProductDetailImageCreationForm
 from productapp.models import Product, ProductThumbnailImage, ProductCategory, ProductDetailImage
 
 
+
+CHECK_AUTHENTICATION = [login_required, user_is_admin]
+
+
 '''
     상품 카테고리를 생성하는 view
 '''
+@method_decorator(CHECK_AUTHENTICATION, 'get')
+@method_decorator(CHECK_AUTHENTICATION, 'post')
 class ProductCategoryCreateView(CreateView):
     model = ProductCategory
     form_class = ProductCategoryCreationForm
@@ -28,6 +36,8 @@ class ProductCategoryCreateView(CreateView):
      - MultiFormView(django-multi-form-view 패키지)를 사용하여
        여러 form을 한 페이지에 구현
 '''
+@method_decorator(CHECK_AUTHENTICATION, 'get')
+@method_decorator(CHECK_AUTHENTICATION, 'post')
 class ProductCreateView(MultiFormView):
     form_classes = {'ProductCreationForm': ProductCreationForm,
                     'ProductThumbnailCreationForm': ProductThumbnailCreationForm,
@@ -86,6 +96,8 @@ class ProductDetailView(DetailView):
     상품을 삭제하는 view
      - 해당 상품의 썸네일, 이미지를 삭제하기 위해 post()를 오버라이딩 함
 '''
+@method_decorator(CHECK_AUTHENTICATION, 'get')
+@method_decorator(CHECK_AUTHENTICATION, 'post')
 class ProductDeleteView(DeleteView):
     model = Product
     context_object_name = 'target_product'
@@ -111,3 +123,4 @@ class ProductDeleteView(DeleteView):
 '''
 class ProductUpdateView(UpdateView):
     pass
+

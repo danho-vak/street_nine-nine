@@ -21,7 +21,7 @@ USER_HAS_OWNERSHIP = [account_has_ownership, login_required]
 class AccountCreateView(CreateView):
     model = User
     form_class = CustomUserCreationForm
-    template_name = 'accountapp/product_create.html'
+    template_name = 'accountapp/create.html'
     success_url = reverse_lazy('accountapp:login')
 
 

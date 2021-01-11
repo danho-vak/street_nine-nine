@@ -9,3 +9,4 @@ class UserAddress(models.Model):
     address_lot_number = models.CharField(max_length=120, null=False)  # 지번
     address_road_name = models.CharField(max_length=120, null=False)  # 도로명
     zip_code = models.CharField(max_length=8, null=False)
+    is_default = models.BooleanField(default=False, null=True, blank=True)  # 기본 주소 설정 여부

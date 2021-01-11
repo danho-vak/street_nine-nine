@@ -6,6 +6,6 @@ app_name = 'addressapp'
 
 
 urlpatterns = [
-    path('list/', AddressListView.as_view(), name='list'),
     path('create/', AddressCreateView.as_view(), name='create'),
+    path('list/', AddressListView.as_view(), name='list'),
 ]
