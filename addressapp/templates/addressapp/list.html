@@ -1,7 +1,10 @@
 {% extends 'base.html' %}
 
 {% block content %}
-{% include 'addressapp/snippets/address_list.html' %}
-
-{% include 'addressapp/create.html' %}
+    <h4>
+        등록된 배송지 목록
+    </h4>
+    {% include 'addressapp/snippets/address_list.html' %}
+    <hr>
+    {% include 'addressapp/create.html' %}
 {% endblock %}

@@ -1,3 +1,4 @@
+
 <table class="table table-hover border-bottom">
     <tr>
         <th>기본 주소로 설정</th>
@@ -9,9 +10,9 @@
         <tr>
             <td>
                 {% if item.is_default %}
-                    <input type="radio" name="is_default" value="True" id="is_default_{{ item.pk }}" checked>
+                    <input type="radio" name="is_default" value="{{ item.pk }}" id="is_default_{{ item.pk }}" checked>
                 {% else %}
-                    <input type="radio" name="is_default" value="True" id="is_default_{{ item.pk }}">
+                    <input type="radio" name="is_default" value="{{ item.pk }}" id="is_default_{{ item.pk }}">
                 {% endif %}
             </td>
             <td>
@@ -27,4 +28,25 @@
         </tr>
     {% endfor %}
 </table>
-<button class="btn btn-primary">기본 주소 변경하기</button>
+<button class="btn btn-primary" onclick="setDefaultAddress();">기본 배송지 변경하기</button>
+
+<script>
+    function setDefaultAddress(){
+        address_pk = $(':checked').val();
+
+        $.ajax({
+            url : '/addresses/update/'+address_pk+'/',
+            type : 'post',
+            data : {
+                csrfmiddlewaretoken : csrftoken,
+                address_pk : address_pk
+                },
+            success : function(data){
+                alert('수정 완료');
+                location.reload();
+            }, error : function(err, status) {
+                alert(err+' : '+status);
+            }
+        });
+    }
+</script>

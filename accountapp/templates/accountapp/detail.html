@@ -35,7 +35,5 @@
         </td>
     </tr>
 </table>
-<h4>등록된 배송지</h4>
-{% include 'addressapp/snippets/address_list.html' with address_list=target_user.useraddress_set.all %}
-<button class="btn btn-primary" onclick="location.href='{% url 'addressapp:create' %}'">배송지 추가하기</button>
+<button class="btn btn-primary" onclick="location.href='{% url 'addressapp:list' %}'">배송지 목록보기</button>
 {% endblock %}
