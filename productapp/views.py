@@ -12,13 +12,12 @@ from productapp.forms import ProductCreationForm, ProductThumbnailCreationForm, 
 from productapp.models import Product, ProductThumbnailImage, ProductCategory, ProductDetailImage
 
 
-
 CHECK_AUTHENTICATION = [login_required, user_is_admin]
 
 
-'''
-    상품 카테고리를 생성하는 view
-'''
+#
+# 상품 카테고리를 생성하는 view
+#
 @method_decorator(CHECK_AUTHENTICATION, 'get')
 @method_decorator(CHECK_AUTHENTICATION, 'post')
 class ProductCategoryCreateView(CreateView):
@@ -31,11 +30,14 @@ class ProductCategoryCreateView(CreateView):
         return super(ProductCategoryCreateView, self).form_valid(form)
 
 
-'''
-    상품을 생성하는 view
-     - MultiFormView(django-multi-form-view 패키지)를 사용하여
-       여러 form을 한 페이지에 구현
-'''
+#
+# 상품을 생성하는 view
+#   - MultiFormView(django-multi-form-view 패키지)를 사용하여
+#     여러 form을 한 페이지에 구현
+#   - Product, ProductThumbnailImage, ProductDetailImage 3개의 object를 생성
+#   - MultiFormView.forms_valid()를 이용해 여러 form의 Validation을 검사하고
+#     Product의 category는 form을 이용하지 않고 받기 때문에 is_vaild()를 통해 따로 validation 검사
+#
 @method_decorator(CHECK_AUTHENTICATION, 'get')
 @method_decorator(CHECK_AUTHENTICATION, 'post')
 class ProductCreateView(MultiFormView):
@@ -83,19 +85,19 @@ class ProductCreateView(MultiFormView):
         return super(ProductCreateView, self).forms_valid(forms)
 
 
-'''
-    상품 상세페이지 view
-'''
+#
+# 상품 상세페이지 view
+#
 class ProductDetailView(DetailView):
     model = Product
     context_object_name = 'target_product'
     template_name = 'productapp/detail.html'
 
 
-'''
-    상품을 삭제하는 view
-     - 해당 상품의 썸네일, 이미지를 삭제하기 위해 post()를 오버라이딩 함
-'''
+#
+# 상품을 삭제하는 view
+#   - 해당 상품의 썸네일, 이미지를 삭제하기 위해 post()를 오버라이딩 함
+#
 @method_decorator(CHECK_AUTHENTICATION, 'get')
 @method_decorator(CHECK_AUTHENTICATION, 'post')
 class ProductDeleteView(DeleteView):
@@ -118,9 +120,9 @@ class ProductDeleteView(DeleteView):
         return super(ProductDeleteView, self).post(request, *args, **kwargs)
 
 
-'''
-    상품의 정보를 수정하는 view
-'''
+#
+# 상품의 정보를 수정하는 view
+#
 class ProductUpdateView(UpdateView):
     pass
 
