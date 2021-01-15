@@ -1,6 +1,6 @@
 function setDefaultAddress(){
-    address_pk = $('input[type=checkbox]:checked').val();
-    name = $('input[type=checkbox]:checked').parent().siblings('#alias').text()
+    address_pk = $('input[type=radio]:checked').val();
+    name = $('input[type=radio]:checked').parent().siblings('#alias').text()
 
     confirm = confirm('"'+name+'"를 기본 배송지로 설정할까요?');
 
@@ -23,8 +23,8 @@ function setDefaultAddress(){
 }
 
 function deleteAddress() {
-    address_pk = $('input[type=checkbox]:checked').val();
-    name = $('input[type=checkbox]:checked').parent().siblings('#alias').text()
+    address_pk = $('input[type=radio]:checked').val();
+    name = $('input[type=radio]:checked').parent().siblings('#alias').text()
 
     confirm = confirm('배송지 "'+name+'"를 삭제할까요?');
 

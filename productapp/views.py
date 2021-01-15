@@ -1,7 +1,7 @@
 import json
 
 from django.contrib.auth.decorators import login_required
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.utils.decorators import method_decorator
 from django.views.generic import CreateView, DetailView, DeleteView, UpdateView
 from multi_form_view import MultiFormView
@@ -124,5 +124,38 @@ class ProductDeleteView(DeleteView):
 # 상품의 정보를 수정하는 view
 #
 class ProductUpdateView(UpdateView):
-    pass
+    model = Product
+    form_class = ProductCreationForm
+    template_name = 'productapp/update/update.html'
+    context_object_name = 'target_product'
 
+    def get_success_url(self):
+        return reverse('productapp:detail', kwargs={'pk':self.object.pk})
+
+#
+# 상품의 이미지를 수정하기 전 기존 이미지를 보여주는 view
+#
+class ProductImageAll(DetailView):
+    model = Product
+    context_object_name = 'target_product'
+    template_name = 'productapp/update/update_image_list.html'
+
+
+
+#
+# 상품의 이미지(Thumbnail, Detail)를 수정하는 view
+#
+class ProductImageChangeView(MultiFormView):
+    form_classes = {'ProductThumbnailCreationForm': ProductThumbnailCreationForm,
+                    'ProductDetailImageCreationForm': ProductDetailImageCreationForm}
+
+    template_name = ''
+
+    def forms_valid(self, forms):
+        target_product_pk = self.request.POST.get('pk')
+        input_thumbnails = self.request.FILES.getlist('thumbnails', None)
+        input_detail_images = self.request.FILES.getlist('detail_images', None)
+
+
+    def get_success_url(self):
+        return reverse('productapp:detail', kwargs={'pk':self.request.POST.get('pk')})

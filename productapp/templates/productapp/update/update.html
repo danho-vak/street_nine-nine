@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+<form action="" method="post">
+    {% csrf_token %}
+    <table class="table table-border">
+        {{ form.as_table }}
+    </table>
+    {{ form.id }}
+    <input class="btn btn-primary" type="submit" value="수정하기">
+    <button class="btn btn-secondary" onclick="history.back();">돌아가기</button>
+</form>
+<hr>
+<button class="btn btn-success" onclick="location.href='{% url 'productapp:images' pk=target_product.pk %}'">이미지 수정하기</button>
+{% endblock %}

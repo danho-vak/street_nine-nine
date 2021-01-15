@@ -16,11 +16,11 @@
         {% for item in address_list %}
             <tr>
                 <td>
-                    <input type="checkbox" value="{{ item.pk }}" id="checkbox_is_default_{{ item.pk }}">
+                    <input type="radio" name="is_default" value="{{ item.pk }}" id="radio_is_default_{{ item.pk }}">
                 </td>
                 <td>
                     {% if item.is_default %}
-                        <input type="radio" name="is_default" value="{{ item.pk }}" id="radio_is_default_{{ item.pk }}" checked>
+                        <input type="checkbox" name="is_default_display" value="{{ item.pk }}" id="is_default_{{ item.pk }}_display" checked disabled>
                     {% else %}
 
                     {% endif %}

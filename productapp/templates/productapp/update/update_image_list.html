@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<h4>기존 이미지</h4>
+<hr>
+<div class="mb-2" id="thumbnail_container">
+    <h5>썸네일</h5>
+    {% for thumb in target_product.product_thumbnails.all %}
+        <img src="{{ thumb.p_thumbnail.url }}" width="200" height="200">
+        <input type="checkbox" name="thumbnail_checkbox" id="thumb_{{ thumb.pk }}" value="{{ thumb.pk }}">
+    {% endfor %}
+</div>
+<button type="button" class="btn btn-primary" onclick="openModal('thumbnail');">수정하기</button>
+<button class="btn btn-danger" onclick="">삭제하기</button>
+
+<hr>
+
+<div class="mb-2" id="detail_image_container">
+    <h5>상세 이미지</h5>
+    {% for detail_image in target_product.product_detail_images.all %}
+        <img src="{{ detail_image.p_detail_image.url }}" width="200" height="200">
+        <input type="checkbox" name="detail_image_checkbox" id="detail_image_{{ detail_image.pk }}" value="{{ detail_image.pk }}">
+    {% endfor %}
+</div>
+<button type="button" class="btn btn-primary" onclick="openModal('detail_image');">수정하기</button>
+<button class="btn btn-danger" onclick="">삭제하기</button>
+
+<hr>
+
+<button class="btn btn-secondary" onclick="history.back();">돌아가기</button>
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="" method="post" id="form_in_modal">
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <input class="btn btn-primary" type="submit" value="이미지 교체하기">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Modal을 닫으면 그 안에 있던 form 내용 비움
+    $('#staticBackdrop').on('hidden.bs.modal', function (e) {
+        $('#form_in_modal').empty();
+    })
+
+    function openModal(target_case){
+        checked_item = ''
+        target_object_pk_list = [];
+
+        if (target_case == 'thumbnail') {
+            checked_item = $('input[name=thumbnail_checkbox]:checked');
+        } else if (target_case == 'detail_image') {
+            checked_item = $('input[name=detail_image_checkbox]:checked');
+        }
+
+
+        for (var i=0; i<checked_item.length; i++){
+            target_object_pk = parseInt(checked_item[i].value);
+            target_object_pk_list.push(target_object_pk); // pk를 parseInt()로 정수형으로 바꾸고 list에 push
+
+            $('#form_in_modal').append('<input type="file" name="modal_input_file" accept="image/*" id="modal_input_'+target_object_pk+'">');
+        }
+
+        $('#staticBackdrop').modal('show');  // Modal open
+    }
+
+</script>
+{% endblock %}
+
+
+
+<!--
+    모달창 하나를 만들고 체크된 수 만큼
+    input file을 만들자 그리고 선택된 유형에따라 request를 보내자.
+-->
+
+
+
