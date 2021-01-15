@@ -155,3 +155,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # Default Login, Logout Redirect URLs
 LOGIN_REDIRECT_URL = reverse_lazy('storeapp:index')
 LOGOUT_REDIRECT_URL = reverse_lazy('storeapp:index')
+
+
+# 세션 만료 설정
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
+SESSION_COOKIE_AGE = 3600  # 1시간
