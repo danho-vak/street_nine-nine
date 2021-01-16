@@ -170,3 +170,28 @@ def ProductImageChangeView(request, pk):
                 each_object.save()
 
         return redirect('productapp:images', pk=pk)
+
+#
+# 상품의 이미지를 삭제하는 view
+#
+def ProductImageDeleteView(request, pk):
+    if request.method == 'POST':
+        object_type = request.POST.get('object_type', None)
+        target_pk_list = request.POST.get('target_pk_list', None)
+
+        print(object_type)
+        print(target_pk_list)
+
+        if object_type == 'thumbnail':
+            target_object = ProductThumbnailImage.objects.filter(p_target_product_id=Product.objects.get(pk=pk))
+            for target_pk in target_pk_list:
+                each_object = target_object.get(pk=target_pk)
+                each_object.p_thumbnail.delete()
+
+        elif object_type == 'detail_image':
+            target_object = ProductDetailImage.objects.filter(p_target_product_id=Product.objects.get(pk=pk))
+            for target_pk in target_pk_list:
+                each_object = target_object.get(pk=target_pk)
+                each_object.p_thumbnail.delete()
+
+    return redirect('productapp:images', pk=pk)

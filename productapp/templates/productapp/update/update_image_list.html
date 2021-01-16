@@ -12,7 +12,7 @@
     {% endfor %}
 </div>
 <button type="button" class="btn btn-primary" onclick="openModal('thumbnail');">수정하기</button>
-<button class="btn btn-danger" onclick="openModal('delete', 'thumbnail');">삭제하기</button>
+<button class="btn btn-danger" onclick="imageDelete('thumbnail');">삭제하기</button>
 
 <hr>
 
@@ -24,7 +24,7 @@
     {% endfor %}
 </div>
 <button type="button" class="btn btn-primary" onclick="openModal('detail_image');">수정하기</button>
-<button class="btn btn-danger" onclick="openModal('delete', 'detail_image');">삭제하기</button>
+<button class="btn btn-danger" onclick="imageDelete('detail_image');">삭제하기</button>
 
 <hr>
 
@@ -61,11 +61,11 @@
     })
 
     function openModal(object_type){
-        checked_item = ''
+        var checked_item = ''
 
-        if (target_case == 'thumbnail') {
+        if (object_type == 'thumbnail') {
             checked_item = $('input[name=thumbnail_checkbox]:checked');
-        } else if (target_case == 'detail_image') {
+        } else if (object_type == 'detail_image') {
             checked_item = $('input[name=detail_image_checkbox]:checked');
         }
 
@@ -78,6 +78,32 @@
         }
 
         $('#staticBackdrop').modal('show');  // Modal open
+    }
+
+
+    function imageDelete(object_type) {
+        var checked_item = ''
+        var target_pk_list = []
+
+        if (object_type == 'thumbnail') {
+            checked_item = $('input[name=thumbnail_checkbox]:checked');
+        } else if (object_type == 'detail_image') {
+            checked_item = $('input[name=detail_image_checkbox]:checked');
+        }
+
+        for (var i=0; i<checked_item.length; i++) {
+            target_pk_list.push(checked_item[i].value);
+        }
+
+        alert(target_pk_list);
+        $.ajax({
+            type: 'post',
+            url: '{% url 'productapp:imageDelete' pk=target_product.pk %}',
+            data: {
+                'object_type': object_type,
+                'target_pk_list': target_pk_list
+            }
+        });
     }
 </script>
 {% endblock %}
