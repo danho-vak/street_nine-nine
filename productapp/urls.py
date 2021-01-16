@@ -1,7 +1,7 @@
 from django.urls import path
 
 from productapp.views import ProductCreateView, ProductCategoryCreateView, ProductDetailView, ProductDeleteView, \
-    ProductUpdateView, ProductImageAll
+    ProductUpdateView, ProductImageAll, ProductImageChangeView
 
 app_name = 'productapp'
 
@@ -12,4 +12,5 @@ urlpatterns = [
     path('update/<int:pk>/', ProductUpdateView.as_view(), name='update'),
     path('images/<int:pk>/', ProductImageAll.as_view(), name='images'),
     path('delete/<int:pk>/', ProductDeleteView.as_view(), name='delete'),
+    path('test/<int:pk>/', ProductImageChangeView, name='changeImage')  # FBV
 ]

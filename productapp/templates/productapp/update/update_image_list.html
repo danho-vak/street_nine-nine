@@ -40,15 +40,16 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
-                <form action="" method="post" id="form_in_modal">
+            <form action="{% url 'productapp:changeImage' pk=target_product.pk %}" method="post" id="form_in_modal">
+                {% csrf_token %}
+                <div class="modal-body">
 
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <input class="btn btn-primary" type="submit" value="이미지 교체하기">
-            </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <input class="btn btn-primary" type="submit" value="이미지 교체하기">
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -61,7 +62,6 @@
 
     function openModal(target_case){
         checked_item = ''
-        target_object_pk_list = [];
 
         if (target_case == 'thumbnail') {
             checked_item = $('input[name=thumbnail_checkbox]:checked');
@@ -69,17 +69,16 @@
             checked_item = $('input[name=detail_image_checkbox]:checked');
         }
 
+        $('.modal-body').append('<input type="hidden" name="target_case" value="'+target_case+'">');
 
         for (var i=0; i<checked_item.length; i++){
-            target_object_pk = parseInt(checked_item[i].value);
-            target_object_pk_list.push(target_object_pk); // pk를 parseInt()로 정수형으로 바꾸고 list에 push
-
-            $('#form_in_modal').append('<input type="file" name="modal_input_file" accept="image/*" id="modal_input_'+target_object_pk+'">');
+            target_object_pk = checked_item[i].value;
+            $('.modal-body').append('<input type="hidden" name="modal_input_hidden" value="'+target_object_pk+'">');
+            $('.modal-body').append('<input type="file" name="modal_input_file" accept="image/*" id="modal_input_'+target_object_pk+'">');
         }
 
         $('#staticBackdrop').modal('show');  // Modal open
     }
-
 </script>
 {% endblock %}
 

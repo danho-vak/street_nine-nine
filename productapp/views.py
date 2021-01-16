@@ -1,6 +1,7 @@
 import json
 
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import redirect
 from django.urls import reverse_lazy, reverse
 from django.utils.decorators import method_decorator
 from django.views.generic import CreateView, DetailView, DeleteView, UpdateView
@@ -145,17 +146,35 @@ class ProductImageAll(DetailView):
 #
 # 상품의 이미지(Thumbnail, Detail)를 수정하는 view
 #
-class ProductImageChangeView(MultiFormView):
-    form_classes = {'ProductThumbnailCreationForm': ProductThumbnailCreationForm,
-                    'ProductDetailImageCreationForm': ProductDetailImageCreationForm}
+# class ProductImageChangeView(MultiFormView):
+#     form_classes = {'ProductThumbnailCreationForm': ProductThumbnailCreationForm,
+#                     'ProductDetailImageCreationForm': ProductDetailImageCreationForm}
+#
+#     template_name = ''
+#
+#     def forms_valid(self, forms):
+#         target_product_pk = self.request.POST.get('pk')
+#         input_thumbnails = self.request.FILES.getlist('thumbnails', None)
+#         input_detail_images = self.request.FILES.getlist('detail_images', None)
+#
+#
+#     def get_success_url(self):
+#         return reverse('productapp:detail', kwargs={'pk':self.request.POST.get('pk')})
 
-    template_name = ''
 
-    def forms_valid(self, forms):
-        target_product_pk = self.request.POST.get('pk')
-        input_thumbnails = self.request.FILES.getlist('thumbnails', None)
-        input_detail_images = self.request.FILES.getlist('detail_images', None)
+def ProductImageChangeView(request, pk):
+    if request.method == 'POST':
+        target_case = request.POST.get('target_case', None)
+        target_pk_list = request.POST.getlist('modal_input_hidden', None)
+        new_image_list = request.POST.getlist('modal_input_file', None)
+        target_object = None
 
+        if target_case == 'thumbnail':
+            target_object = ProductThumbnailImage.objects.filter(pk=pk)
 
-    def get_success_url(self):
-        return reverse('productapp:detail', kwargs={'pk':self.request.POST.get('pk')})
+        elif target_case == 'detail_image':
+            target_object = ProductDetailImage.objects.filter(pk=pk)
+
+        for target_pk in target_pk_list:
+            print(target_object.get(pk=target_pk))
+            print(target_object.filter(pk=target_pk))
