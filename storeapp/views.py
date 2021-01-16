@@ -15,3 +15,6 @@ class StoreMainList(ListView):
     model = Product
     context_object_name = 'product_list'
     template_name = 'storeapp/main/index.html'
+
+    def get_queryset(self):
+        return Product.objects.all().select_related().order_by('-product_created_at')

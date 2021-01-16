@@ -19,8 +19,7 @@ CHECK_AUTHENTICATION = [login_required, user_is_admin]
 #
 # 상품 카테고리를 생성하는 view
 #
-@method_decorator(CHECK_AUTHENTICATION, 'get')
-@method_decorator(CHECK_AUTHENTICATION, 'post')
+@method_decorator(CHECK_AUTHENTICATION, 'dispatch')
 class ProductCategoryCreateView(CreateView):
     model = ProductCategory
     form_class = ProductCategoryCreationForm
@@ -39,8 +38,7 @@ class ProductCategoryCreateView(CreateView):
 #   - MultiFormView.forms_valid()를 이용해 여러 form의 Validation을 검사하고
 #     Product의 category는 form을 이용하지 않고 받기 때문에 is_vaild()를 통해 따로 validation 검사
 #
-@method_decorator(CHECK_AUTHENTICATION, 'get')
-@method_decorator(CHECK_AUTHENTICATION, 'post')
+@method_decorator(CHECK_AUTHENTICATION, 'dispatch')
 class ProductCreateView(MultiFormView):
     form_classes = {'ProductCreationForm': ProductCreationForm,
                     'ProductThumbnailCreationForm': ProductThumbnailCreationForm,
@@ -89,6 +87,7 @@ class ProductCreateView(MultiFormView):
 #
 # 상품 상세페이지 view
 #
+@method_decorator(CHECK_AUTHENTICATION, 'dispatch')
 class ProductDetailView(DetailView):
     model = Product
     context_object_name = 'target_product'
@@ -99,8 +98,7 @@ class ProductDetailView(DetailView):
 # 상품을 삭제하는 view
 #   - 해당 상품의 썸네일, 이미지를 삭제하기 위해 post()를 오버라이딩 함
 #
-@method_decorator(CHECK_AUTHENTICATION, 'get')
-@method_decorator(CHECK_AUTHENTICATION, 'post')
+@method_decorator(CHECK_AUTHENTICATION, 'dispatch')
 class ProductDeleteView(DeleteView):
     model = Product
     context_object_name = 'target_product'
@@ -124,6 +122,7 @@ class ProductDeleteView(DeleteView):
 #
 # 상품의 정보를 수정하는 view
 #
+@method_decorator(CHECK_AUTHENTICATION, 'dispatch')
 class ProductUpdateView(UpdateView):
     model = Product
     form_class = ProductCreationForm
@@ -136,45 +135,38 @@ class ProductUpdateView(UpdateView):
 #
 # 상품의 이미지를 수정하기 전 기존 이미지를 보여주는 view
 #
+@method_decorator(CHECK_AUTHENTICATION, 'dispatch')
 class ProductImageAll(DetailView):
     model = Product
     context_object_name = 'target_product'
     template_name = 'productapp/update/update_image_list.html'
 
-
-
 #
-# 상품의 이미지(Thumbnail, Detail)를 수정하는 view
+# 상품의 이미지를 수정하는 view
+#   - FBV로 작성되었고, 기존 이미지를 삭제하고 새로 업로드 함
 #
-# class ProductImageChangeView(MultiFormView):
-#     form_classes = {'ProductThumbnailCreationForm': ProductThumbnailCreationForm,
-#                     'ProductDetailImageCreationForm': ProductDetailImageCreationForm}
-#
-#     template_name = ''
-#
-#     def forms_valid(self, forms):
-#         target_product_pk = self.request.POST.get('pk')
-#         input_thumbnails = self.request.FILES.getlist('thumbnails', None)
-#         input_detail_images = self.request.FILES.getlist('detail_images', None)
-#
-#
-#     def get_success_url(self):
-#         return reverse('productapp:detail', kwargs={'pk':self.request.POST.get('pk')})
-
-
+@login_required
+@user_is_admin
 def ProductImageChangeView(request, pk):
     if request.method == 'POST':
-        target_case = request.POST.get('target_case', None)
+        object_type = request.POST.get('object_type', None)
         target_pk_list = request.POST.getlist('modal_input_hidden', None)
-        new_image_list = request.POST.getlist('modal_input_file', None)
-        target_object = None
+        new_image_list = request.FILES.getlist('modal_input_file', None)
 
-        if target_case == 'thumbnail':
-            target_object = ProductThumbnailImage.objects.filter(pk=pk)
+        if object_type == 'thumbnail':
+            target_object = ProductThumbnailImage.objects.filter(p_target_product_id=Product.objects.get(pk=pk))
+            for idx, val in enumerate(target_pk_list):
+                each_object = target_object.get(pk=val)
+                each_object.p_thumbnail.delete()
+                each_object.p_thumbnail = new_image_list[idx]
+                each_object.save()
 
-        elif target_case == 'detail_image':
-            target_object = ProductDetailImage.objects.filter(pk=pk)
+        elif object_type == 'detail_image':
+            target_object = ProductDetailImage.objects.filter(p_target_product_id=Product.objects.get(pk=pk))
+            for idx, val in enumerate(target_pk_list):
+                each_object = target_object.get(pk=val)
+                each_object.p_detail_image.delete()
+                each_object.p_detail_image = new_image_list[idx]
+                each_object.save()
 
-        for target_pk in target_pk_list:
-            print(target_object.get(pk=target_pk))
-            print(target_object.filter(pk=target_pk))
+        return redirect('productapp:images', pk=pk)

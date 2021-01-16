@@ -12,7 +12,7 @@
     {% endfor %}
 </div>
 <button type="button" class="btn btn-primary" onclick="openModal('thumbnail');">수정하기</button>
-<button class="btn btn-danger" onclick="">삭제하기</button>
+<button class="btn btn-danger" onclick="openModal('delete', 'thumbnail');">삭제하기</button>
 
 <hr>
 
@@ -24,11 +24,11 @@
     {% endfor %}
 </div>
 <button type="button" class="btn btn-primary" onclick="openModal('detail_image');">수정하기</button>
-<button class="btn btn-danger" onclick="">삭제하기</button>
+<button class="btn btn-danger" onclick="openModal('delete', 'detail_image');">삭제하기</button>
 
 <hr>
 
-<button class="btn btn-secondary" onclick="history.back();">돌아가기</button>
+<button class="btn btn-secondary" onclick="location.href='{% url 'productapp:update' pk=target_product.pk %}'">정보 수정으로 돌아가기</button>
 
 <!-- Modal -->
 <div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -40,7 +40,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{% url 'productapp:changeImage' pk=target_product.pk %}" method="post" id="form_in_modal">
+            <form action="{% url 'productapp:changeImage' pk=target_product.pk %}" method="post" id="form_in_modal" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="modal-body">
 
@@ -60,7 +60,7 @@
         $('#form_in_modal').empty();
     })
 
-    function openModal(target_case){
+    function openModal(object_type){
         checked_item = ''
 
         if (target_case == 'thumbnail') {
@@ -69,7 +69,7 @@
             checked_item = $('input[name=detail_image_checkbox]:checked');
         }
 
-        $('.modal-body').append('<input type="hidden" name="target_case" value="'+target_case+'">');
+        $('.modal-body').append('<input type="hidden" name="object_type" value="'+object_type+'">');
 
         for (var i=0; i<checked_item.length; i++){
             target_object_pk = checked_item[i].value;

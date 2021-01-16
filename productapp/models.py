@@ -18,6 +18,7 @@ class Product(models.Model):
     product_sale_price = models.IntegerField(null=False, blank=False)                           # 제품 실제 판매 가격(파생 컬럼으로 사용 예정)
     product_description = models.CharField(max_length=200, null=False, blank=False)             # 제품 설명
     product_is_display = models.BooleanField(default=True)                                      # 제품 전시 여부
+    product_created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.product_title
