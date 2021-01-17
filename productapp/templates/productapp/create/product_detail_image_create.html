@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<form action="" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <table>
+        {{ form.as_table }}
+    </table>
+    <input class="btn btn-primary" type="submit" value="업로드">
+    <input class="btn btn-secondary" type="button" onclick="history.back();" value="뒤로가기">
+</form>
+{% endblock %}

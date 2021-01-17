@@ -132,6 +132,7 @@ class ProductUpdateView(UpdateView):
     def get_success_url(self):
         return reverse('productapp:detail', kwargs={'pk':self.object.pk})
 
+
 #
 # 상품의 이미지를 수정하기 전 기존 이미지를 보여주는 view
 #
@@ -140,6 +141,7 @@ class ProductImageAll(DetailView):
     model = Product
     context_object_name = 'target_product'
     template_name = 'productapp/update/update_image_list.html'
+
 
 #
 # 상품의 이미지를 수정하는 view
@@ -174,10 +176,12 @@ def ProductImageChangeView(request, pk):
 #
 # 상품의 이미지를 삭제하는 view
 #
+@login_required
+@user_is_admin
 def ProductImageDeleteView(request, pk):
     if request.method == 'POST':
         object_type = request.POST.get('object_type', None)
-        target_pk_list = request.POST.get('target_pk_list', None)
+        target_pk_list = request.POST.getlist('target_pk_list[]', None)  # Javascript Array
 
         print(object_type)
         print(target_pk_list)
@@ -187,11 +191,48 @@ def ProductImageDeleteView(request, pk):
             for target_pk in target_pk_list:
                 each_object = target_object.get(pk=target_pk)
                 each_object.p_thumbnail.delete()
+                each_object.delete()
 
         elif object_type == 'detail_image':
             target_object = ProductDetailImage.objects.filter(p_target_product_id=Product.objects.get(pk=pk))
             for target_pk in target_pk_list:
                 each_object = target_object.get(pk=target_pk)
-                each_object.p_thumbnail.delete()
+                each_object.p_detail_image.delete()
+                each_object.delete()
+        return redirect('productapp:images', pk=pk)
 
-    return redirect('productapp:images', pk=pk)
+#
+# 상품의 썸네일을 추가하는 view
+#
+@method_decorator(CHECK_AUTHENTICATION, 'get')
+@method_decorator(CHECK_AUTHENTICATION, 'post')
+class ProductThumbnailCreateView(CreateView):
+    model = ProductThumbnailImage
+    form_class = ProductThumbnailCreationForm
+    template_name = 'productapp/create/product_thumbnail_create.html'
+
+    def form_valid(self, form):
+        new_item = form.save(commit=False)
+        new_item.p_target_product_id = Product.objects.get(pk=self.kwargs['pk'])
+        new_item.save()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('productapp:images', kwargs={'pk': self.kwargs['pk']})
+
+
+@method_decorator(CHECK_AUTHENTICATION, 'get')
+@method_decorator(CHECK_AUTHENTICATION, 'post')
+class ProductDetailImageCreateView(CreateView):
+    model = ProductDetailImage
+    form_class = ProductDetailImageCreationForm
+    template_name = 'productapp/create/product_detail_image_create.html'
+
+    def form_valid(self, form):
+        new_item = form.save(commit=False)
+        new_item.p_target_product_id = Product.objects.get(pk=self.kwargs['pk'])
+        new_item.save()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('productapp:images', kwargs={'pk': self.kwargs['pk']})
