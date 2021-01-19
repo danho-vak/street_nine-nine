@@ -71,14 +71,14 @@ def set_default_address(request, case):
     before_object = UserAddress.objects.filter(target_user=request.user, is_default=True)
 
     if before_object:  # 탐색된 레코드가 있다면
-        if case == 'create':
+        if case == 'create':  # 새로운 배송지 추가시
             if request.POST.get('is_default', None) == 'checked':  # 기본 주소 설정 체크박스가 체크되었다면
                 before_object.update(is_default=False)  # 해당 레코드의 기본 주소 설정 값을 False로 변경하고 True 반환
                 return True
             else:
                 return False
 
-        elif case == 'update':
+        elif case == 'update':  # 기존 배송지 중 기본 배송지로 변경하는 경우
             target_object = UserAddress.objects.filter(pk=request.POST.get('address_pk'))
             before_object.update(is_default=False)
             target_object.update(is_default=True)

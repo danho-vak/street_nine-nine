@@ -221,6 +221,7 @@ class ProductThumbnailCreateView(CreateView):
         return reverse('productapp:images', kwargs={'pk': self.kwargs['pk']})
 
 
+
 @method_decorator(CHECK_AUTHENTICATION, 'get')
 @method_decorator(CHECK_AUTHENTICATION, 'post')
 class ProductDetailImageCreateView(CreateView):
