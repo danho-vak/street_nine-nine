@@ -1,5 +1,5 @@
 from django.forms import ModelForm, Select
-from productapp.models import Product, ProductThumbnailImage, ProductCategory, ProductDetailImage
+from productapp.models import Product, ProductThumbnailImage, ProductCategory, ProductDetailImage, ProductOption
 
 
 class ProductCategoryCreationForm(ModelForm):
@@ -16,7 +16,7 @@ class ProductCreationForm(ModelForm):
 
 
 '''
-    제품의 썸네일을 저장할 form
+    상품의 썸네일을 저장할 form
         - __init__()에서 input file의 속성값을 multiple로 업데이트함
         - p_target_product_id는 제외(제품 등록시 Product.pk는 미등록 상태이기 때문에 ProductCreateView의 forms_vaild에서 설정) 
 '''
@@ -32,7 +32,7 @@ class ProductThumbnailCreationForm(ModelForm):
 
 
 '''
-    제품의 상세 이미지를 저장할 form
+    상품의 상세 이미지를 저장할 form
         - 위의 ProductThumbnailCreationForm과 같은 로직
 '''
 class ProductDetailImageCreationForm(ModelForm):
@@ -44,3 +44,12 @@ class ProductDetailImageCreationForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(ProductDetailImageCreationForm, self).__init__(*args, **kwargs)
         self.fields['p_detail_image'].widget.attrs.update({'multiple': 'multiple'})
+
+#
+#   상품의 옵션을 담을 form
+#
+class ProductOptionCreationForm(ModelForm):
+    class Meta:
+        model = ProductOption
+        fields = ['p_product_option_class_1', 'p_product_option_class_2']
+        exclude = ['p_target_product_id']

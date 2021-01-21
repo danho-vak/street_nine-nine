@@ -31,6 +31,16 @@
     </tr>
     <tr>
         <td>
+            {{ target_product.product_option.first.p_product_option_class_1 }}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            {{ target_product.product_option.first.p_product_option_class_2 }}
+        </td>
+    </tr>
+    <tr>
+        <td>
             {% for detail_image in target_product.product_detail_images.all %}
                 <img src="{{ detail_image.p_detail_image.url }}" width="1024" height="2068">
             {% endfor %}

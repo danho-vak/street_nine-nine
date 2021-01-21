@@ -9,7 +9,7 @@ from multi_form_view import MultiFormView
 
 from productapp.decorator import user_is_admin
 from productapp.forms import ProductCreationForm, ProductThumbnailCreationForm, ProductCategoryCreationForm, \
-    ProductDetailImageCreationForm
+    ProductDetailImageCreationForm, ProductOptionCreationForm
 from productapp.models import Product, ProductThumbnailImage, ProductCategory, ProductDetailImage
 
 
@@ -42,7 +42,8 @@ class ProductCategoryCreateView(CreateView):
 class ProductCreateView(MultiFormView):
     form_classes = {'ProductCreationForm': ProductCreationForm,
                     'ProductThumbnailCreationForm': ProductThumbnailCreationForm,
-                    'ProductDetailImageCreationForm': ProductDetailImageCreationForm}
+                    'ProductDetailImageCreationForm': ProductDetailImageCreationForm,
+                    'ProductOptionCreationForm': ProductOptionCreationForm}
 
     template_name = 'productapp/create/product_create.html'
     success_url = reverse_lazy('storeapp:index')
@@ -61,6 +62,7 @@ class ProductCreateView(MultiFormView):
         category_form = ProductCategoryCreationForm({'category_parent': self.request.POST.get('category_parent'),
                                                      'category_name': self.request.POST.get('category_name')})
 
+        # 카테고리 먼저 저장 후 해당 카테고리를 상품에 전달
         if category_form.is_valid():  # category form 유효성 체크
             category = category_form.save()
 
@@ -80,6 +82,11 @@ class ProductCreateView(MultiFormView):
                 new_detail_image.p_target_product_id = product
                 new_detail_image.p_detail_image = detail_image
                 new_detail_image.save()
+
+        # 상품 옵션 저장
+        product_option = forms['ProductOptionCreationForm'].save(commit=False)
+        product_option.p_target_product_id = product
+        product_option.save()
 
         return super(ProductCreateView, self).forms_valid(forms)
 
