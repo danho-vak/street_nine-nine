@@ -5,7 +5,7 @@
 
 <table class="table text-center">
     <tr>
-        <td rowspan="7">
+        <td rowspan="8">
             <div id="carouselExampleIndicators" class="carousel slide carousel-fade" data-ride="carousel">
                 <ol class="carousel-indicators">
                     {% for thumb in target_product.product_thumbnails.all %}
@@ -28,6 +28,11 @@
                     <span class="sr-only">Next</span>
                 </a>
             </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            {{ target_product.product_category.category_name }}
         </td>
     </tr>
     <tr>

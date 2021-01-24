@@ -10,15 +10,15 @@
             </th>
             <td>
                 <div id="product_category_container">
-                    <select id="large_category">
+                    <select id="large_category" required>
                         <option value="">선택 없음</option>
                     </select>
 
-                    <select id="medium_category">
+                    <select id="medium_category" required>
                         <option value="">선택 없음</option>
                     </select>
 
-                    <select id="small_category">
+                    <select id="small_category" required>
                         <option value="">선택 없음</option>
                     </select>
                 </div>
@@ -52,8 +52,6 @@
             $(this).removeAttr('disabled');
         })
     });
-
-
 
     $('#id_p_product_option_class_2').keyup(function(e) {
         var optionValueCheck = /[~!@\#$%^&*\()\-=+_'\[\]{}]/gi;

@@ -58,14 +58,11 @@ class ProductCreateView(MultiFormView):
         product = forms['ProductCreationForm'].save(commit=False)
         thumb_list = self.request.FILES.getlist('p_thumbnail', None)
         detail_list = self.request.FILES.getlist('p_detail_image', None)
+        category_parent = self.request.POST.get('category_parent', None)
 
-        category_form = ProductCategoryCreationForm({'category_parent': self.request.POST.get('category_parent'),
-                                                     'category_name': self.request.POST.get('category_name')})
-
-        # 카테고리 먼저 저장 후 해당 카테고리를 상품에 전달
-        if category_form.is_valid():  # category form 유효성 체크
-            category = category_form.save()
-
+        if category_parent:
+            category = ProductCategory.objects.get(pk=category_parent)
+            print(category)
             product.product_category = category
             product.save()
 

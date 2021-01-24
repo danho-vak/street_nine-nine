@@ -15,6 +15,7 @@ from accountapp.models import User
 
 
 # method_decorator로 설정할 user의 인증 여부
+
 USER_HAS_OWNERSHIP = [account_has_ownership, login_required]
 
 
@@ -23,8 +24,12 @@ class AccountCreateView(CreateView):
     form_class = CustomUserCreationForm
     template_name = 'accountapp/create.html'
     success_url = reverse_lazy('accountapp:login')
-
-
+    
+    def form_valid(self, form):
+        user = form.save()
+        cart = Cart(user=user).save()
+        return super(AccountCreateView, self).form_valid(form) 
+    
 @method_decorator(USER_HAS_OWNERSHIP, 'dispatch')
 class AccountPWChangeView(FormView):
     model = User
