@@ -46,6 +46,29 @@
 </form>
 
 <script>
+    // submit시 disabled 속성 지우는 script
+    $('form').submit(function(e){
+        $(':disabled').each(function(e){
+            $(this).removeAttr('disabled');
+        })
+    });
+
+
+
+    $('#id_p_product_option_class_2').keyup(function(e) {
+        var optionValueCheck = /[~!@\#$%^&*\()\-=+_'\[\]{}]/gi;
+        var optionVal = $("#id_p_product_option_class_2");
+
+        if (optionValueCheck.test(optionVal.val())) {
+            optionVal.val(optionVal.val().replace(optionValueCheck,""));
+        }
+    });
+
+    // product_sale_id를 조합해주는 script
+    $('#id_product_code').blur(function(e){
+        $('#id_product_sale_id').val($('#id_product_id').val() + $('#id_product_code').val());
+    });
+
     $('#large_category').change(function(){  // 대->중 카테고리 이벤트 등록
         medium_categories = data.filter(obj => obj.category_parent_id == this.value);
         $('#medium_category').empty().append('<option value="">선택 없음</option>');

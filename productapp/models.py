@@ -10,8 +10,8 @@ class Product(models.Model):
                                          on_delete=models.SET_NULL,
                                          null=True,
                                          verbose_name='product_category')
-    product_id = models.CharField(max_length=10, null=False, blank=False)                       # 판매자가 부여한 제품의 ID
-    product_code = models.CharField(max_length=10, null=False, blank=False, unique=True)        # 상품의 옵션에 따른 판매자가 부여한 상품의 고유 CODE
+    product_id = models.CharField(max_length=10, null=False, blank=False, unique=True)                       # 판매자가 부여한 제품의 ID
+    product_code = models.CharField(max_length=10, null=False, blank=False)                     # 상품의 옵션에 따른 판매자가 부여한 상품의 고유 CODE
     product_sale_id = models.CharField(max_length=10, null=False, blank=False, unique=True)     # 상품의 ID + CODE로 조합된 판매코드(파생 컬럼으로 사용 예정)
     product_title = models.CharField(max_length=100, null=False, blank=False)                   # 상품 명
     product_origin_price = models.IntegerField(null=False, blank=False)                         # 상품 원가

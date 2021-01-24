@@ -14,6 +14,9 @@ class ProductCreationForm(ModelForm):
         fields = '__all__'
         exclude = ['product_category']
 
+    def __init__(self, *args, **kwargs):
+        super(ProductCreationForm, self).__init__(*args, **kwargs)
+        self.fields['product_sale_id'].widget.attrs.update({'disabled': 'disabled'})
 
 '''
     상품의 썸네일을 저장할 form
