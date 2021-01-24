@@ -13,9 +13,9 @@
     <div>
         {{ target_product.product_sale_id }}
     </div>
-    <form action="{% url 'productapp:delete' pk=target_product.pk %}" method="post">
+    <form action="" method="post">
         {% csrf_token %}
-        <button class="btn btn-secondary" onclick="history.back();">뒤로가기</button>
+        <input type="button" class="btn btn-secondary" value="뒤로가기" onclick="history.back();">
         <input type="submit" class="btn btn-danger" value="삭제하기">
     </form>
 </div>

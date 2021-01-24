@@ -25,6 +25,11 @@
                         <h3 onclick="location.href='{% url 'accountapp:login' %}'">anonymous user</h3>
                     {% endif %}
                 </li>
+                <li>
+                    {% if user.is_admin %}
+                        <a class="nav-link" href="{% url 'productapp:create' %}">상품 등록</a>
+                    {% endif %}
+                </li>
             </ul>
         </div>
     </div>

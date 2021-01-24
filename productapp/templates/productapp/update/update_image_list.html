@@ -1,7 +1,9 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-
+<button class="btn btn-success" onclick="location.href='{% url 'productapp:thumbnailCreate' pk=target_product.pk %}'">썸네일 추가</button>
+<button class="btn btn-success" onclick="location.href='{% url 'productapp:detailCreate' pk=target_product.pk %}'">상세이미지 추가</button>
+<hr>
 <h4>기존 이미지</h4>
 <hr>
 <div class="mb-2" id="thumbnail_container">

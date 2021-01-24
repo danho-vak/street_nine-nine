@@ -7,8 +7,8 @@
     </table>
     {{ form.id }}
     <input class="btn btn-primary" type="submit" value="수정하기">
-    <button class="btn btn-secondary" onclick="location.href='{% url 'productapp:detail' pk=target_product.pk %}'">돌아가기</button>
+    <input class="btn btn-secondary" type="button" onclick="location.href='{% url 'productapp:detail' pk=target_product.pk %}'" value="돌아가기">
 </form>
 <hr>
-<button class="btn btn-success" onclick="location.href='{% url 'productapp:images' pk=target_product.pk %}'">이미지 수정하기</button>
+<button class="btn btn-warning" onclick="location.href='{% url 'productapp:images' pk=target_product.pk %}'">이미지 수정하기</button>
 {% endblock %}

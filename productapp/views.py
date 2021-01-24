@@ -94,7 +94,6 @@ class ProductCreateView(MultiFormView):
 #
 # 상품 상세페이지 view
 #
-@method_decorator(CHECK_AUTHENTICATION, 'dispatch')
 class ProductDetailView(DetailView):
     model = Product
     context_object_name = 'target_product'
