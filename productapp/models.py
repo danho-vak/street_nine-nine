@@ -1,7 +1,7 @@
 from django.db import models
 
 from imagekit.models import ProcessedImageField
-from pilkit.processors import Thumbnail
+from pilkit.processors import Thumbnail, Transpose
 
 
 class Product(models.Model):
@@ -34,7 +34,9 @@ class ProductThumbnailImage(models.Model):
                                             related_name='product_thumbnails',
                                             verbose_name='p_target_product_id')
     p_thumbnail = ProcessedImageField(upload_to='product_thumbnails',
-                                      processors=[Thumbnail(300, 300)],
+                                      processors=[
+                                          Transpose(),
+                                          Thumbnail(300, 300)],
                                       format='JPEG',
                                       options={'quality': 60}, null=True, blank=True)
 

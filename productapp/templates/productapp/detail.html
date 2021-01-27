@@ -32,6 +32,7 @@
     </tr>
     <tr>
         <td>
+            <input type="hidden" id="target_product_pk" value="{{ target_product.pk }}">
             {{ target_product.product_category.category_name }}
         </td>
     </tr>
@@ -79,11 +80,17 @@
     </tr>
     <tr>
         <td>
-            <button class="btn btn-warning" onclick="location.href='{% url 'productapp:update' pk=target_product.pk%}'">상품 수정하기</button>
-            <button class="btn btn-danger" onclick="location.href='{% url 'productapp:delete' pk=target_product.pk%}'">상품 삭제하기</button>
+            {% if user.is_authenticated %}
+                <button class="btn btn-success" onclick="addCart();">장바구니에 추가</button>
+                {% if user.is_admin %}
+                    <button class="btn btn-warning" onclick="location.href='{% url 'productapp:update' pk=target_product.pk%}'">상품 수정하기</button>
+                    <button class="btn btn-danger" onclick="location.href='{% url 'productapp:delete' pk=target_product.pk%}'">상품 삭제하기</button>
+                {% endif %}
+            {% endif %}
         </td>
     </tr>
 </table>
+<script src="{% static 'js/cartapp/cart.js' %}"></script>
 <script>
     $('.carousel-inner').children(':first-child').attr('class', 'carousel-item active');
     $('.carousel-indicators').children(':first-child').attr('class', 'active');

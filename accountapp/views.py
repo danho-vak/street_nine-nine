@@ -13,9 +13,9 @@ from accountapp.decorator import account_has_ownership
 from accountapp.forms import CustomUserCreationForm
 from accountapp.models import User
 
+from cartapp.models import Cart
 
 # method_decorator로 설정할 user의 인증 여부
-
 USER_HAS_OWNERSHIP = [account_has_ownership, login_required]
 
 
@@ -27,9 +27,11 @@ class AccountCreateView(CreateView):
     
     def form_valid(self, form):
         user = form.save()
-        cart = Cart(user=user).save()
+        cart = Cart(user=user)
+        cart.save()  # 유저를 생성할 때, 장바구니도 생성
         return super(AccountCreateView, self).form_valid(form) 
-    
+
+
 @method_decorator(USER_HAS_OWNERSHIP, 'dispatch')
 class AccountPWChangeView(FormView):
     model = User

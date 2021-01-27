@@ -1,10 +1,10 @@
 from django.urls import path
 
-from cartapp.views import AddCartView
+from cartapp.views import CartItemCreateView
 
 app_name = 'cartapp'
 
 
 urlpatterns = [
-    path('add/', AddCartView, name='add'),
+    path('add/', CartItemCreateView, name='add'),
 ]

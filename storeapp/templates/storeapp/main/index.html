@@ -8,7 +8,23 @@
         <div class="col mx-4 my-4" style="max-width: 18rem;">
             <a href="{% url 'productapp:detail' pk=item.pk %}">
                 <div class="card" style="width: 18rem;">
-                    <img src="{{ item.product_thumbnails.first.p_thumbnail.url }}" class="card-img-top">
+                    <div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel">
+                        <div class="carousel-inner">
+                            {% for thumb in item.product_thumbnails.all %}
+                                {% if thumb == item.product_thumbnails.first %}
+                                    True
+                                    <div class="carousel-item active">
+                                        <img src="{{ thumb.p_thumbnail.url }}" class="card-img-top d-block w-100" alt="...">
+                                    </div>
+                                {% else %}
+                                    <div class="carousel-item">
+                                        <img src="{{ thumb.p_thumbnail.url }}" class="card-img-top d-block w-100" alt="...">
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+<!--                    <img src="{{ item.product_thumbnails.first.p_thumbnail.url }}" class="card-img-top">-->
                     <div class="card-body">
                         <div class="card-text text-dark">
                             <b>{{ item.product_title }}</b>
