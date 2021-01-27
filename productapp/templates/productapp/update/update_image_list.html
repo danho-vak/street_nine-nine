@@ -126,6 +126,7 @@
 
                 $.post('{% url 'productapp:imageDelete' pk=target_product.pk %}' ,
                         {
+                            'csrfmiddlewaretoken' : csrftoken,
                             'object_type': object_type,
                             'target_pk_list': target_pk_list
                         }, function() {

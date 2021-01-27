@@ -81,7 +81,7 @@
     <tr>
         <td>
             {% if user.is_authenticated %}
-                <button class="btn btn-success" onclick="addCart();">장바구니에 추가</button>
+                <button class="btn btn-success" onclick="addCartItem();">장바구니에 추가</button>
                 {% if user.is_admin %}
                     <button class="btn btn-warning" onclick="location.href='{% url 'productapp:update' pk=target_product.pk%}'">상품 수정하기</button>
                     <button class="btn btn-danger" onclick="location.href='{% url 'productapp:delete' pk=target_product.pk%}'">상품 삭제하기</button>

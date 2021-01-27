@@ -18,14 +18,19 @@
                         <button class="btn btn-outline-success" type="submit">Search</button>
                     </form>
                 </li>
+                {% if user.is_authenticated %}
                 <li class="nav-item">
-                    {% if user.is_authenticated %}
-                        <a class="nav-link" href="{% url 'accountapp:detail' pk=user.pk %}">user is : {{ user.username }}</a>
-                    {% else %}
-                        <h3 onclick="location.href='{% url 'accountapp:login' %}'">anonymous user</h3>
-                    {% endif %}
+                    <a class="nav-link" href="{% url 'accountapp:detail' pk=user.pk %}">user is : {{ user.username }}</a>
                 </li>
-                <li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'cartapp:list' %}">장바구니</a>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <h3 onclick="location.href='{% url 'accountapp:login' %}'">anonymous user</h3>
+                </li>
+                {% endif %}
+                <li class="nav-item">
                     {% if user.is_admin %}
                         <a class="nav-link" href="{% url 'productapp:create' %}">상품 등록</a>
                     {% endif %}

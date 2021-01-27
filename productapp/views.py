@@ -186,9 +186,6 @@ def ProductImageDeleteView(request, pk):
         object_type = request.POST.get('object_type', None)
         target_pk_list = request.POST.getlist('target_pk_list[]', None)  # Javascript Array
 
-        print(object_type)
-        print(target_pk_list)
-
         if object_type == 'thumbnail':
             target_object = ProductThumbnailImage.objects.filter(p_target_product_id=Product.objects.get(pk=pk))
             for target_pk in target_pk_list:

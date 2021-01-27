@@ -5,8 +5,13 @@ from django.utils.decorators import method_decorator
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView
 from django.views.generic.edit import FormMixin
 
+from addressapp.decorator import address_ownership
 from addressapp.forms import AddressCreationForm, AddressDefaultUpdateFrom
 from addressapp.models import UserAddress
+
+
+USER_HAS_ADDRESS_OWNERSHIP = [address_ownership, login_required]
+
 
 #
 # 배송지를 추가하는 View
@@ -45,7 +50,7 @@ class AddressListView(ListView, FormMixin):
 # 기본 배송지로 설정하는 view (addressapp:list에서 ajax로 호출)
 #    - post()를 오버라이딩해 요청을 처리하는데 set_default_address()에서 is_default field를 설정함
 #
-@method_decorator(login_required, 'dispatch')
+@method_decorator(USER_HAS_ADDRESS_OWNERSHIP, 'dispatch')
 class AddressUpdateDefaultView(UpdateView):
     def post(self, request, *args, **kwargs):
         set_default_address(self.request, 'update')
@@ -55,7 +60,7 @@ class AddressUpdateDefaultView(UpdateView):
 #
 # 배송지를 삭제하는 view (addressapp:list에서 ajax로 호출)
 #
-@method_decorator(login_required, 'dispatch')
+@method_decorator(USER_HAS_ADDRESS_OWNERSHIP, 'dispatch')
 class AddressDeleteView(DeleteView):
     model = UserAddress
     success_url = reverse_lazy('addressapp:list')
