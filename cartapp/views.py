@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
@@ -65,12 +66,11 @@ def CartItemCreateView(request):
                 )
                 new_item.save()
 
-            return redirect('cartapp:list')
+            return HttpResponse(status=200)
 
         except ObjectDoesNotExist:
             print('잘못된 장바구니 또는 상품 조회!')
-            return False
-    return False
+            return HttpResponse(status=500)
 
 
 @login_required
@@ -84,11 +84,11 @@ def CartItemDeleteView(request, cart_pk):
             for item_pk in cart_item_list:
                 cart_item = target_cart.cart_item.get(pk=item_pk)
                 cart_item.delete()
+            return HttpResponse(status=200)
 
         except ObjectDoesNotExist:
             print('잘못된 장바구니 상품 조회!')
-
-    return redirect('cartapp:list')
+            return HttpResponse(status=500)
 
 
 @login_required
@@ -98,7 +98,8 @@ def CartItemQuantityUpdateView(request, cart_pk):
         try:
             cart = Cart.objects.get(pk=cart_pk)
             cart.cart_item.filter(pk=request.POST.get('target_item')).update(quantity=request.POST.get('input_quantity'))
+            return HttpResponse(status=200)
+
         except ObjectDoesNotExist:
             print('잘못된 장바구니 상품 조회!')
-
-        return redirect('cartapp:list')
+            return HttpResponse(status=500)
