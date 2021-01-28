@@ -4,7 +4,7 @@
 {% block content %}
 
 <table class="table table-borderless">
-    <tr>
+    <tr class="text-center">
         <th></th>
         <th>상품 이미지</th>
         <th>상품 정보</th>
@@ -23,13 +23,27 @@
             </a>
         </td>
         <td>{{ item.product.product_sale_price }}</td>
-        <td>{{ item.price_total }}</td>
+        <td>{{ item.sub_total }}</td>
     </tr>
     <tr>
         <td>{{ item.product_option.p_product_option_class_1 }} : {{ item.product_option.p_product_option_class_2 }}</td>
-        <td> 수량 : <input type="number" id="cart_item_quantity_{{ item.pk }}" value="{{ item.quantity }}"></td>
+        <td>
+            <div class="input-group">
+                수량 :
+                <input class="form-control" type="number" id="cart_item_quantity_{{ item.pk }}" value="{{ item.quantity }}">
+                <div class="input-group-append">
+                    <button class="btn btn-sm btn-outline-secondary" onclick="changeQuantity({{ item.pk}}, {{ item.quantity }});">수정</button>
+                </div>
+            </div>
+        </td>
     </tr>
     {% endfor %}
+    <tr>
+        <td colspan="4"></td>
+        <td class="sub_total">
+            합계: {{ total_price }}
+        </td>
+    </tr>
 </table>
 <div class="text-right">
     <button class="btn btn-secondary" onclick="deleteCartItem();">상품 삭제</button>
@@ -37,6 +51,29 @@
 </div>
 
 <script>
+    // 장바구니 상품의 수량을 변경
+    function changeQuantity(target_item, origin_item_quantity){
+        input_quantity = $('#cart_item_quantity_'+target_item).val();
+
+        // 기존에 저장된 수량값과 다르다면(수정할 수 있다면)
+        if (input_quantity != origin_item_quantity) {
+
+            if (input_quantity > 0) {
+                $.post('{% url 'cartapp:quantityUpdate' cart_pk=target_cart.pk %}',
+                    {
+                        'csrfmiddlewaretoken' : csrftoken,
+                        'target_item' : target_item,
+                        'input_quantity' : input_quantity
+                    }, function() {
+                        alert('상품 수량을 변경했어요!');
+                        location.reload();
+                });
+            } else {
+                alert('수량을 정확하게 입력해주세요!');
+            }
+        }
+    }
+
     // checkbox 선택된 값이 있는지 확인
     function isChecked(){
         checked_item = $('input[name=cart_item_checkbox]:checked');
@@ -48,6 +85,7 @@
         }
     }
 
+    // 선택된 장바구니 상품 삭제
     function deleteCartItem(){
         checked_item = isChecked();
         if (checked_item) {

@@ -3,7 +3,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
-from django.views.generic import ListView
+from django.views.generic import ListView, UpdateView
 
 from cartapp.decorator import cart_ownership
 from productapp.models import Product
@@ -26,9 +26,14 @@ class CartListView(ListView):
     def get_queryset(self):
         return Cart.objects.get(user=self.request.user)
 
-
-method_decorator(USER_HAS_CART_OWNERSHIP, 'dispatch')
-
+    # 해당 cart에 담긴 모든 item의 총 가격
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        total_price = 0
+        for each_item in Cart.objects.get(user=self.request.user).cart_item.all():
+            total_price += each_item.sub_total()
+        context['total_price'] = total_price
+        return context
 
 #
 #  CartItem을 생성하는 View
@@ -84,3 +89,16 @@ def CartItemDeleteView(request, cart_pk):
             print('잘못된 장바구니 상품 조회!')
 
     return redirect('cartapp:list')
+
+
+@login_required
+@cart_ownership
+def CartItemQuantityUpdateView(request, cart_pk):
+    if request.method == 'POST':
+        try:
+            cart = Cart.objects.get(pk=cart_pk)
+            cart.cart_item.filter(pk=request.POST.get('target_item')).update(quantity=request.POST.get('input_quantity'))
+        except ObjectDoesNotExist:
+            print('잘못된 장바구니 상품 조회!')
+
+        return redirect('cartapp:list')

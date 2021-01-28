@@ -17,9 +17,8 @@ class CartItem(models.Model):
     product_option = models.ForeignKey(ProductOption, on_delete=models.CASCADE, related_name='cart_product_option')
     quantity = models.IntegerField(default=0)
 
-    def price_total(self):
+    def sub_total(self):
         return self.product.product_sale_price * self.quantity
-
 
     def __str__(self):
         return "{}  -->  {}'s cart ".format(self.product.product_title, self.cart.user.username)
