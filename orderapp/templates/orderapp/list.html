@@ -3,7 +3,9 @@
 {% load imagekit %}
 {% block content %}
 
-{% include 'cartapp/snippets/cart_item_list.html' %}
+<h2>구매하실 상품을 확인해주세요!</h2>
+<hr>
+{% include 'cartapp/snippets/cart_item_list.html' with target_cart=target_order.cart %}
 <div class="text-right">
     <button class="btn btn-secondary" onclick="deleteCartItem();">선택 삭제</button>
     <button class="btn btn-primary" onclick="location.href='{% url 'orderapp:list' %}'">구매하기</button>

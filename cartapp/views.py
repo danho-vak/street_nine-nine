@@ -27,15 +27,6 @@ class CartListView(ListView):
     def get_queryset(self):
         return Cart.objects.get(user=self.request.user)
 
-    # 해당 cart에 담긴 모든 item의 총 가격
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        total_price = 0
-        for each_item in Cart.objects.get(user=self.request.user).cart_item.all():
-            total_price += each_item.sub_total()
-        context['total_price'] = total_price
-        return context
-
 #
 #  CartItem을 생성하는 View
 #    - $.post()로 호출
