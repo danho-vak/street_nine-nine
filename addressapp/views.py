@@ -65,6 +65,18 @@ class AddressDeleteView(DeleteView):
     model = UserAddress
     success_url = reverse_lazy('addressapp:list')
 
+    def delete(self, request, *args, **kwargs):
+        target_address = self.get_object()
+        if target_address.is_default:  # 삭제하려는 주소가 기본 배송지라면
+            try:
+                not_default_address = UserAddress.objects.exclude(is_default=True).first()  # 기본 배송지가 아닌 배송지 중에서 첫번째
+                not_default_address.is_default = True
+                not_default_address.save()
+            except:
+                pass
+
+        return super().delete(request, *args, **kwargs)
+
 
 #
 # 기본 배송지로 설정하는 함수

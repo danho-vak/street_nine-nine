@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load imagekit %}
+{% block content %}
+
+<h4>구매하실 상품을 확인해주세요!</h4>
+<hr>
+{% include 'cartapp/snippets/cart_item_list.html' with target_cart=target_order %}
+<hr>
+<h4>배송받으실 주소를 확인해주세요!</h4>
+
+{% include 'addressapp/snippets/address_list.html' with address_list=target_order.user.useraddress_set.all %}
+
+{% for default_addr in target_order.user.useraddress_set.all %}
+    {% if default_addr.is_default %}
+        {% include 'addressapp/create.html' with default_address=default_addr %}
+    {% endif %}
+{% endfor %}
+
+<div class="text-right">
+    <button class="btn btn-secondary" onclick="deleteCartItem();">선택 삭제</button>
+    <button class="btn btn-primary" onclick="iamportPayment();">구매하기</button>
+</div>
+
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js" ></script>
+<script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
+<script>
+    function iamportPayment () {
+        var IMP = window.IMP; // 생략가능
+        IMP.init('imp57633587'); // 'iamport' 대신 부여받은 "가맹점 식별코드"를 사용
+
+        IMP.request_pay({
+            pg : 'inicis', // version 1.1.0부터 지원.
+            pay_method : 'card',
+            merchant_uid : 'merchant_' + new Date().getTime(),
+            name : '주문명:결제테스트',
+            amount : {{ target_order.total_price }},
+            buyer_name : '{{ user.username }}',
+            buyer_email  : '{{ user }}',
+            buyer_tel : '{{ user.phone_number }}',
+            buyer_addr : $('#sample6_address').val() +' '+ $('#sample6_detailAddress').val(),
+            buyer_postcode : $('#sample6_postcode').val(),
+            m_redirect_url : '{% url 'storeapp:index'%}'
+            }, function(rsp) {
+                if ( rsp.success ) {
+                    var msg = '결제가 완료되었습니다.';
+                    msg += '고유ID : ' + rsp.imp_uid;
+                    msg += '상점 거래ID : ' + rsp.merchant_uid;
+                    msg += '결제 금액 : ' + rsp.paid_amount;
+                    msg += '카드 승인번호 : ' + rsp.apply_num;
+                } else {
+                    var msg = '결제에 실패하였습니다.';
+                    msg += '에러내용 : ' + rsp.error_msg;
+                }
+                alert(msg);
+        });
+    }
+</script>
+{% endblock %}

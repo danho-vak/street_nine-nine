@@ -2,37 +2,7 @@
 {% load static %}
 
 {% block content %}
-    <h4>
-        등록된 배송지 목록
-    </h4>
-    <table class="table table-hover border-bottom">
-        <tr>
-            <th>선택</th>
-            <th>기본 배송지</th>
-            <th>이름</th>
-            <th>주소</th>
-            <th>우편번호</th>
-        </tr>
-        {% for item in address_list %}
-            <tr>
-                <td>
-                    <input type="radio" name="is_default" value="{{ item.pk }}" id="radio_is_default_{{ item.pk }}">
-                </td>
-                <td>
-                    {% if item.is_default %}
-                        <input type="checkbox" name="is_default_display" value="{{ item.pk }}" id="is_default_{{ item.pk }}_display" checked disabled>
-                    {% else %}
-
-                    {% endif %}
-                </td>
-                <td id="alias">{{ item.address_alias }}</td>
-                <td>{{ item.address_road_name }} (도로명)<br>
-                    <small>{{ item.address_lot_number }} (지번)</small>
-                </td>
-                <td>{{ item.zip_code }}</td>
-            </tr>
-        {% endfor %}
-    </table>
+    {% include 'addressapp/snippets/address_list.html' %}
     <button class="btn btn-primary" onclick="setDefaultAddress();">기본 배송지 변경하기</button>
     <button class="btn btn-secondary" onclick="deleteAddress();">배송지 삭제하기</button>
 
