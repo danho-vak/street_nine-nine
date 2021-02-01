@@ -25,7 +25,22 @@
 <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js" ></script>
 <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
 <script>
+
+    // 상품 가지수 별 iamport결제시 출력될 상품명 설정하는 script
+    function productCount(){
+        var rows = document.getElementsByName('cart_item_checkbox').length;
+        var first_product_name = $('body > div.container > table.table.table-borderless > tbody > tr:nth-child(2) > td:nth-child(3) > a').text().trim();
+        if (rows > 1) {
+            return first_product_name +'외 ' + String(rows-1) + '건'
+        } else {
+            return first_product_name
+        }
+    }
+
+
+    // iamport 결제 로드 script
     function iamportPayment () {
+        console.log(productCount());
         var IMP = window.IMP; // 생략가능
         IMP.init('imp57633587'); // 'iamport' 대신 부여받은 "가맹점 식별코드"를 사용
 
@@ -33,10 +48,10 @@
             pg : 'inicis', // version 1.1.0부터 지원.
             pay_method : 'card',
             merchant_uid : 'merchant_' + new Date().getTime(),
-            name : '주문명:결제테스트',
+            name : productCount(),
             amount : {{ target_order.total_price }},
             buyer_name : '{{ user.username }}',
-            buyer_email  : '{{ user }}',
+            buyer_email  : '{{ user.id }}',
             buyer_tel : '{{ user.phone_number }}',
             buyer_addr : $('#sample6_address').val() +' '+ $('#sample6_detailAddress').val(),
             buyer_postcode : $('#sample6_postcode').val(),

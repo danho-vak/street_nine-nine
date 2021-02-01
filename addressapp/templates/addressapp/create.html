@@ -3,24 +3,24 @@
     <table class="table table-borderless">
         <tr>
             <td>
-                <input type="text" name="address_alias" id="address_alias" placeholder="주소 목록에 보여질 이름" value="{{ default_address.address_alias }}">
+                <input type="text" name="address_alias" id="address_alias" placeholder="주소 목록에 보여질 이름" value="{{ default_address.address_alias }}" required>
                 <input type="checkbox" name="is_default" id="is_default" value="checked">기본 주소로 설정
             </td>
         </tr>
         <tr>
             <td>
-                <input type="text" name="zip_code" id="sample6_postcode" placeholder="우편번호" disabled value="{{ default_address.zip_code }}">
+                <input type="text" name="zip_code" id="sample6_postcode" placeholder="우편번호" disabled value="{{ default_address.zip_code }}" required>
                 <input type="button" onclick="sample6_execDaumPostcode()" value="우편번호 찾기">
             </td>
         </tr>
         <tr>
             <td>
-                <input type="text" name="address_lot_number" id="sample6_address" placeholder="주소" disabled value="{{ default_address.address_road_name }}">
+                <input type="text" name="address_lot_number" id="sample6_address" placeholder="주소" disabled value="{{ default_address.address_road_name }}" required>
             </td>
         </tr>
             <tr>
                 <td>
-                    <input type="hidden" name="" id="hidden_address" value="{{ default_address.address_lot_number }}">
+                    <input type="hidden" name="" id="hidden_address" value="{{ default_address.address_lot_number }}" required>
                     <input type="text" name="address_detail_info" id="sample6_detailAddress" placeholder="상세주소" value="{{ default_address.address_detail_info }}">
                     <input type="text" id="sample6_extraAddress" placeholder="참고항목">
                 </td>
