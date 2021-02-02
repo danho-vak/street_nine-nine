@@ -16,8 +16,8 @@ class UserManager(BaseUserManager):
             raise ValueError('모든 필드값을 입력해주세요!')
 
         user = self.model(
-            email = self.normalize_email(email),
-            username = username,
+            email=self.normalize_email(email),
+            username=username,
             **extra_fields
         )
         user.set_password(password)
@@ -28,9 +28,9 @@ class UserManager(BaseUserManager):
         extra_fields.setdefault('phone_number', '00000000000')
         extra_fields.setdefault('date_of_birth', '1900-01-01')
         user = self.create_user(
-            email = self.normalize_email(email),
-            username = username,
-            password = password,
+            email=self.normalize_email(email),
+            username=username,
+            password=password,
             **extra_fields
         )
         user.is_admin = True

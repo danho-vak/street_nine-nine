@@ -14,6 +14,7 @@
 {% for default_addr in target_order.user.useraddress_set.all %}
     {% if default_addr.is_default %}
         {% include 'addressapp/create.html' with default_address=default_addr %}
+        <input type="hidden" name="user_default_address" id="user_default_address" value="{{ default_addr.pk }}">
     {% endif %}
 {% endfor %}
 
@@ -37,38 +38,84 @@
         }
     }
 
+    // 새로운 주문을 생성하는 script
+    function createOrder(){
+            result = {}
+            $.ajax({
+                url : '{% url 'orderapp:createOrder' %}',
+                type : 'post',
+                dataType : 'json',
+                data : {
+                    'csrfmiddlewaretoken' : csrftoken,
+                    'address_pk' : $('#user_default_address').val()
+                }, success : function (data){
+                    result['is_saved'] = true;
+                    result['merchant_uid'] = data['merchant_uid'];
+                    result['amount'] = data['amount'];
+                }, error : function (err, status) {
+                    alert(err+' : '+status);
+                }
+            });
+        return result  // 주문 object 생성 여부에 따른 결과 리턴
+    }
+
+    // 실제 결제된 금액이 맞는지 확인 요청 보내는 script
+    function paymentCheck(merchant_uid, amount){
+        $.ajax({
+            url : '{% url 'orderapp:paymentCheck' %}',
+            type : 'post',
+            dataType : 'json',
+            data : {
+                'csrfmiddlewaretoken' : csrftoken,
+                'merchant_uid' : merchant_uid,
+                'amount' : amount
+            }, success : function (data){
+                alert(data);
+            }, error : function (err, status) {
+                alert(err+' : '+status);
+            }
+        });
+    }
+
 
     // iamport 결제 로드 script
     function iamportPayment () {
-        console.log(productCount());
         var IMP = window.IMP; // 생략가능
         IMP.init('imp57633587'); // 'iamport' 대신 부여받은 "가맹점 식별코드"를 사용
 
-        IMP.request_pay({
-            pg : 'inicis', // version 1.1.0부터 지원.
-            pay_method : 'card',
-            merchant_uid : 'merchant_' + new Date().getTime(),
-            name : productCount(),
-            amount : {{ target_order.total_price }},
-            buyer_name : '{{ user.username }}',
-            buyer_email  : '{{ user.id }}',
-            buyer_tel : '{{ user.phone_number }}',
-            buyer_addr : $('#sample6_address').val() +' '+ $('#sample6_detailAddress').val(),
-            buyer_postcode : $('#sample6_postcode').val(),
-            m_redirect_url : '{% url 'storeapp:index'%}'
-            }, function(rsp) {
-                if ( rsp.success ) {
-                    var msg = '결제가 완료되었습니다.';
-                    msg += '고유ID : ' + rsp.imp_uid;
-                    msg += '상점 거래ID : ' + rsp.merchant_uid;
-                    msg += '결제 금액 : ' + rsp.paid_amount;
-                    msg += '카드 승인번호 : ' + rsp.apply_num;
-                } else {
-                    var msg = '결제에 실패하였습니다.';
-                    msg += '에러내용 : ' + rsp.error_msg;
-                }
-                alert(msg);
-        });
+        order_response = createOrder();  // json 객체임
+
+        console.log(order_response['is_saved']);
+        if (order_response['is_saved']) {
+            IMP.request_pay({
+                pg : 'inicis', // version 1.1.0부터 지원.
+                pay_method : 'card',
+                merchant_uid : order_response['merchant_uid'],
+                name : productCount(),
+                amount : order_response['amount'],
+                buyer_name : '{{ user.username }}',
+                buyer_email  : '{{ user.id }}',
+                buyer_tel : '{{ user.phone_number }}',
+                buyer_addr : $('#sample6_address').val() +' '+ $('#sample6_detailAddress').val(),
+                buyer_postcode : $('#sample6_postcode').val(),
+                m_redirect_url : '{% url 'storeapp:index'%}'
+                }, function(rsp) {
+                    if ( rsp.success ) {
+                        var msg = '결제가 완료되었습니다.';
+                        msg += '고유ID : ' + rsp.imp_uid;
+                        msg += '상점 거래ID : ' + rsp.merchant_uid;
+                        msg += '결제 금액 : ' + rsp.paid_amount;
+                        msg += '카드 승인번호 : ' + rsp.apply_num;
+                        paymentCheck(rsp.merchant_uid, rsp.paid_amount);
+                    } else {
+                        var msg = '결제에 실패하였습니다.';
+                        msg += '에러내용 : ' + rsp.error_msg;
+                    }
+                    alert(msg);
+            });
+        } else {
+            alert('Iamport 결제 요청 실패');
+        }
     }
 </script>
 {% endblock %}

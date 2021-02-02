@@ -7,15 +7,15 @@ from productapp.models import Product, ProductOption
 class Cart(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='cart_user')
 
-    def __str__(self):
-        return "{}'s cart".format(self.user.username)
-
     # 장바구니에 담긴 가격 총 합
     def total_price(self):
         result = 0
         for each_item in self.cart_item.all():
             result += each_item.sub_total()
         return result
+
+    def __str__(self):
+        return "{}'s cart".format(self.user.username)
 
 
 class CartItem(models.Model):
