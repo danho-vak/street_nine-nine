@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
-from django.http import HttpResponse, JsonResponse
+from django.http import JsonResponse
 from django.shortcuts import render
 from django.utils import timezone
 from django.utils.decorators import method_decorator
@@ -59,8 +59,9 @@ def orderCreateView(request):
 
                 # 정상적으로 저장되었다면 해당 주문의 merchant_uid를 리턴
                 return JsonResponse({'merchant_uid': merchant_uid, 'amount': order.amount}, status=200)
-            except:
+            except Exception as e:
                 print('주문 생성 실패')
+                print(e)
                 return JsonResponse({}, status=500)
         else:
             print('장바구니 조회 실패')
@@ -70,13 +71,14 @@ def orderCreateView(request):
 def orderPaymentCheck(request):
     if request.method == 'POST':
         iamport = Iamport(imp_key=settings.IAMPORT_KEY, imp_secret=settings.IAMPORT_SECRET)
-        merchant_uid = request.method.POST('merchant_uid', None)
+        merchant_uid = request.POST.get('merchant_uid', None)
 
         try:
             order = Order.objects.get(merchant_uid=merchant_uid)
 
             response = iamport.find(merchant_uid=merchant_uid)  # iamport에서 merchant_uid로 결제 정보를 찾음
             # iamport에서 위의 find()를 통해 응답 받은 response를 가지고 실제 결제된 금액이 맞는지 확인
+            print(response)
             is_paid = iamport.is_paid(order.amount, response=response)
 
             print(is_paid)
@@ -84,4 +86,4 @@ def orderPaymentCheck(request):
         except ObjectDoesNotExist:
             print('DB 주문 정보 찾을 수 없음')
             return JsonResponse({}, status=500)
-        print(response)
+

@@ -9,7 +9,7 @@ from productapp.models import Product, ProductOption
 #  결제할 주문 정보를 담을 model
 class Order(models.Model):
     merchant_uid = models.CharField(max_length=100, null=False, blank=False)
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='order_user')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='order_user')
     address = models.ForeignKey(UserAddress, on_delete=models.SET_NULL, related_name='order_address', null=True)
     amount = models.IntegerField(null=False, blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -34,3 +34,8 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return "{}".format(self.product.product_title)
+
+
+#  주문한 상품의 결제 상태를 저장할 model
+class OrderTransaction(models.Model):
+    pass

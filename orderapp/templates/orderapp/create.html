@@ -40,22 +40,24 @@
 
     // 새로운 주문을 생성하는 script
     function createOrder(){
-            result = {}
-            $.ajax({
-                url : '{% url 'orderapp:createOrder' %}',
-                type : 'post',
-                dataType : 'json',
-                data : {
-                    'csrfmiddlewaretoken' : csrftoken,
-                    'address_pk' : $('#user_default_address').val()
-                }, success : function (data){
-                    result['is_saved'] = true;
-                    result['merchant_uid'] = data['merchant_uid'];
-                    result['amount'] = data['amount'];
-                }, error : function (err, status) {
-                    alert(err+' : '+status);
-                }
-            });
+        result = {}
+        $.ajax({
+            url : '{% url 'orderapp:createOrder' %}',
+            type : 'post',
+            dataType : 'json',
+            async : false,
+            data : {
+                'csrfmiddlewaretoken' : csrftoken,
+                'address_pk' : $('#user_default_address').val()
+            }, success : function (data){
+                result['is_saved'] = true;
+                result['merchant_uid'] = data['merchant_uid'];
+                result['amount'] = data['amount'];
+
+            }, error : function (err, status) {
+                alert(err+' : '+status);
+            }
+        });
         return result  // 주문 object 생성 여부에 따른 결과 리턴
     }
 
@@ -77,24 +79,22 @@
         });
     }
 
-
     // iamport 결제 로드 script
-    function iamportPayment () {
+     function iamportPayment() {
         var IMP = window.IMP; // 생략가능
         IMP.init('imp57633587'); // 'iamport' 대신 부여받은 "가맹점 식별코드"를 사용
 
-        order_response = createOrder();  // json 객체임
+        order_info = createOrder();
 
-        console.log(order_response['is_saved']);
-        if (order_response['is_saved']) {
+        if (order_info['is_saved']) {
             IMP.request_pay({
                 pg : 'inicis', // version 1.1.0부터 지원.
                 pay_method : 'card',
-                merchant_uid : order_response['merchant_uid'],
+                merchant_uid : order_info['merchant_uid'],
                 name : productCount(),
-                amount : order_response['amount'],
+                amount : order_info['amount'],
                 buyer_name : '{{ user.username }}',
-                buyer_email  : '{{ user.id }}',
+                buyer_email  : '{{ user }}',
                 buyer_tel : '{{ user.phone_number }}',
                 buyer_addr : $('#sample6_address').val() +' '+ $('#sample6_detailAddress').val(),
                 buyer_postcode : $('#sample6_postcode').val(),
