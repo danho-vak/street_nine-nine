@@ -1,4 +1,7 @@
+from django.conf import settings
 from django.db import models
+from django.db.models.signals import post_save
+from iamport import Iamport
 
 from accountapp.models import User
 from addressapp.models import UserAddress
@@ -37,5 +40,47 @@ class OrderItem(models.Model):
 
 
 #  주문한 상품의 결제 상태를 저장할 model
+#    - Order 모델에서 가져오는게 아닌, iamport에서 가져온 결제 상태를 담음
 class OrderTransaction(models.Model):
-    pass
+    order = models.OneToOneField(Order, related_name='order_transaction', on_delete=models.CASCADE)
+    imp_uid = models.CharField(max_length=100, null=False, blank=False)
+    merchant_uid = models.CharField(max_length=100, null=False, blank=False)
+    amount = models.IntegerField(null=False, blank=False)
+    paid_at = models.CharField(max_length=100, null=True, blank=True)
+    status = models.CharField(max_length=100, null=False, blank=False)
+    cancel_amount = models.IntegerField(null=True, blank=True)
+    cancel_history = models.CharField(max_length=100, null=True, blank=True)
+    cancel_reason = models.CharField(max_length=100, null=True, blank=True)
+    cancelled_at = models.CharField(max_length=100, null=True, blank=True)
+    fail_reason = models.CharField(max_length=100, null=True, blank=True)
+    failed_at = models.CharField(max_length=100, null=True, blank=True)
+
+
+IAMPORT = Iamport(imp_key=settings.IAMPORT_KEY, imp_secret=settings.IAMPORT_SECRET)
+
+def paymentPrepare(sender, instance, created, *args, **kwargs):
+    try:
+        response = IAMPORT.prepare(merchant_uid=instance.merchant_uid, amount=instance.amount)
+        print('결제 사전정보 등록 결과 : {}'.format(response))
+    except Iamport.ResponseError as e:
+        print('비정상적인 결제 정보')
+    except Iamport.HttpError as http_error:
+        print('결제 사전 정보 찾을 수 없음')
+
+def paymentPrepareValidation(sender, instance, created, *args, **kwargs):
+    try:
+        result = IAMPORT.prepare_validate(merchant_uid=instance.merchant_uid, amount=instance.amount)
+
+        if result is not True:
+            pass  # 결제 유효성 실패시 로직
+
+
+        print('결제 사전정보 유효성 검사 결과 : {}'.format(result))
+    except Iamport.ResponseError as e:
+        print('비정상적인 결제 정보')
+    except Iamport.HttpError as http_error:
+        print('결제 사전 정보 찾을 수 없음')
+
+
+post_save.connect(paymentPrepare, sender=Order)  # Order가 저장되면 paymentPrepare()실행
+post_save.connect(paymentPrepareValidation, sender=OrderTransaction)  # OrderTransaction이 저장되면 paymentPrepare()실행

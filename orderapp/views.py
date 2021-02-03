@@ -11,11 +11,12 @@ from iamport import Iamport
 from addressapp.models import UserAddress
 from cartapp.models import Cart
 from orderapp.decorator import order_ownership
-from orderapp.models import Order, OrderItem
+from orderapp.models import Order, OrderItem, OrderTransaction
 
 USER_HAS_ORDER_OWNERSHIP = [order_ownership, login_required]
 
 
+#  주문서를 출력할 view
 method_decorator(USER_HAS_ORDER_OWNERSHIP, 'get')
 class OrderListView(ListView):
     model = Cart
@@ -57,7 +58,7 @@ def orderCreateView(request):
                     )
                     new_order_item.save()
 
-                # 정상적으로 저장되었다면 해당 주문의 merchant_uid를 리턴
+                # 정상적으로 저장되었다면 해당 주문의 merchant_uid와 amount를 리턴
                 return JsonResponse({'merchant_uid': merchant_uid, 'amount': order.amount}, status=200)
             except Exception as e:
                 print('주문 생성 실패')
@@ -68,6 +69,8 @@ def orderCreateView(request):
             return JsonResponse({}, status=500)
 
 
+#  iamport에 결제가 되었는지 확인한 후 결과를 저장함
+#    - ajax로 호출됨(paymentCheck())
 def orderPaymentCheck(request):
     if request.method == 'POST':
         iamport = Iamport(imp_key=settings.IAMPORT_KEY, imp_secret=settings.IAMPORT_SECRET)
@@ -77,13 +80,27 @@ def orderPaymentCheck(request):
             order = Order.objects.get(merchant_uid=merchant_uid)
 
             response = iamport.find(merchant_uid=merchant_uid)  # iamport에서 merchant_uid로 결제 정보를 찾음
-            # iamport에서 위의 find()를 통해 응답 받은 response를 가지고 실제 결제된 금액이 맞는지 확인
-            print(response)
-            is_paid = iamport.is_paid(order.amount, response=response)
+            is_paid = iamport.is_paid(order.amount, response=response)  # return : boolean
 
-            print(is_paid)
+            #  iamport에 결제됬다면 DB에 해당 내용 저장
+            if is_paid:
+                new_order_transaction = OrderTransaction(
+                    order=order,
+                    imp_uid=response['imp_uid'],
+                    merchant_uid=response['merchant_uid'],
+                    amount=response['amount'],
+                    paid_at=response['imp_uid'],
+                    status=response['status'],
+                    cancel_amount=response['cancel_amount'],
+                    cancel_history=response['cancel_history'],
+                    cancel_reason=response['cancel_reason'],
+                    cancelled_at=response['cancelled_at'],
+                    fail_reason=response['fail_reason'],
+                    failed_at=response['failed_at']
+                )
+                new_order_transaction.save()
+                return JsonResponse({'order_id': order.pk}, status=200)  # redirect ?
 
         except ObjectDoesNotExist:
             print('DB 주문 정보 찾을 수 없음')
             return JsonResponse({}, status=500)
-

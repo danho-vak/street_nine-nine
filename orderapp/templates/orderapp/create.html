@@ -72,7 +72,8 @@
                 'merchant_uid' : merchant_uid,
                 'amount' : amount
             }, success : function (data){
-                alert(data);
+                console.log(data);
+                console.log(data['order_id']);
             }, error : function (err, status) {
                 alert(err+' : '+status);
             }
@@ -94,7 +95,7 @@
                 name : productCount(),
                 amount : order_info['amount'],
                 buyer_name : '{{ user.username }}',
-                buyer_email  : '{{ user }}',
+                buyer_email  : '{{ user.email }}',
                 buyer_tel : '{{ user.phone_number }}',
                 buyer_addr : $('#sample6_address').val() +' '+ $('#sample6_detailAddress').val(),
                 buyer_postcode : $('#sample6_postcode').val(),
