@@ -40,6 +40,7 @@ class OrderItem(models.Model):
 
 
 #  주문한 상품의 결제 상태를 저장할 model
+#    - Order와 OrderTransaction은 1:1 관계
 #    - Order 모델에서 가져오는게 아닌, iamport에서 가져온 결제 상태를 담음
 class OrderTransaction(models.Model):
     order = models.OneToOneField(Order, related_name='order_transaction', on_delete=models.CASCADE)

@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<h4> 주문 내역 </h4>
+<table>
+    <tr>
+        <th>1</th>
+        <th>2</th>
+        <th>3</th>
+        <th>4</th>
+        <th>5</th>
+    </tr>
+    {% for order in order_list.all %}
+        <tr>
+            <td>{{ order.created_at }}</td>
+            <td>{{ order }}</td>
+            <td>{{ order.order_transaction.paid_at }}</td>
+            <td>{{ order.order_transaction.status }}</td>
+            <td><button class="btn btn-sm btn-danger" onclick="paymentCancel({{ order.pk }});">결제 취소</button></td>
+        </tr>
+    {% endfor %}
+</table>
+<script>
+    function paymentCancel(order_id){
+        $.post('{% url 'orderapp:paymentCancel' %}',
+            {
+                'csrfmiddlewaretoken' : csrftoken,
+                'order_id':order_id
+            }, function() {
+                alert('결제가 취소되었습니다.');
+                location.reload();
+            });
+    }
+</script>
+{% endblock %}

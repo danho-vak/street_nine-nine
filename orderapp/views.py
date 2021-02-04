@@ -13,8 +13,11 @@ from cartapp.models import Cart
 from orderapp.decorator import order_ownership
 from orderapp.models import Order, OrderItem, OrderTransaction
 
+#  User 권한 데코레이터
 USER_HAS_ORDER_OWNERSHIP = [order_ownership, login_required]
 
+#  iamport 전역 변수
+IAMPORT = Iamport(imp_key=settings.IAMPORT_KEY, imp_secret=settings.IAMPORT_SECRET)
 
 #  주문서를 출력할 view
 method_decorator(USER_HAS_ORDER_OWNERSHIP, 'get')
@@ -73,14 +76,14 @@ def orderCreateView(request):
 #    - ajax로 호출됨(paymentCheck())
 def orderPaymentCheck(request):
     if request.method == 'POST':
-        iamport = Iamport(imp_key=settings.IAMPORT_KEY, imp_secret=settings.IAMPORT_SECRET)
+
         merchant_uid = request.POST.get('merchant_uid', None)
 
         try:
             order = Order.objects.get(merchant_uid=merchant_uid)
 
-            response = iamport.find(merchant_uid=merchant_uid)  # iamport에서 merchant_uid로 결제 정보를 찾음
-            is_paid = iamport.is_paid(order.amount, response=response)  # return : boolean
+            response = IAMPORT.find(merchant_uid=merchant_uid)  # iamport에서 merchant_uid로 결제 정보를 찾음
+            is_paid = IAMPORT.is_paid(order.amount, response=response)  # return : boolean
 
             #  iamport에 결제됬다면 DB에 해당 내용 저장
             if is_paid:
@@ -89,7 +92,7 @@ def orderPaymentCheck(request):
                     imp_uid=response['imp_uid'],
                     merchant_uid=response['merchant_uid'],
                     amount=response['amount'],
-                    paid_at=response['imp_uid'],
+                    paid_at=response['paid_at'],
                     status=response['status'],
                     cancel_amount=response['cancel_amount'],
                     cancel_history=response['cancel_history'],
@@ -100,6 +103,70 @@ def orderPaymentCheck(request):
                 )
                 new_order_transaction.save()
                 return JsonResponse({'order_id': order.pk}, status=200)  # redirect ?
+
+        except ObjectDoesNotExist:
+            print('DB 주문 정보 찾을 수 없음')
+            return JsonResponse({}, status=500)
+
+#  결제과정에서 취소된 경우 해당 주문 model 삭제
+def orderPaymentError(request):
+    if request.method == 'POST':
+        try:
+            order = Order.objects.get(user=request.user, merchant_uid=request.POST.get('merchant_uid', None))
+            order.delete()
+            return JsonResponse({}, status=200)
+
+        except ObjectDoesNotExist:
+            print('DB 주문 정보 찾을 수 없음')
+            return JsonResponse({}, status=500)
+
+
+#  User의 주문 내역 List View
+class UserOrderListView(ListView):
+    context_object_name = 'order_list'
+    template_name = 'orderapp/list.html'
+
+    def get_queryset(self):
+        return Order.objects.filter(user=self.request.user)
+
+
+#  결제 취소 view
+def orderPaymentCancel(request):
+    if request.method == 'POST':
+        order_pk = request.POST.get('order_id', None)
+        try:
+            order = Order.objects.get(pk=order_pk)  # 주문 정보를 찾고
+            try:
+                imp_uid = order.order_transaction.imp_uid  # 찾은 주문 정보에서 order_transaction의 imp_uid를 가져옴
+                order_transaction = OrderTransaction.objects.filter(order=order, imp_uid=imp_uid)  # 위의 정보로 transaction 찾음
+                try:
+                    # iamport에 결제 취소 요청
+                    cancel_response = IAMPORT.cancel('구매자 요청으로 취소', imp_uid=imp_uid)
+                    # 응답 받은 취소 요청 결과를 order_transaction에 반영
+                    order_transaction.update(
+                        paid_at=cancel_response['paid_at'],
+                        status=cancel_response['status'],
+                        cancel_amount=cancel_response['cancel_amount'],
+                        cancel_history=cancel_response['cancel_history'],
+                        cancel_reason=cancel_response['cancel_reason'],
+                        cancelled_at=cancel_response['cancelled_at'],
+                        fail_reason=cancel_response['fail_reason'],
+                        failed_at=cancel_response['failed_at']
+                    )
+                    return JsonResponse({}, status=200)
+
+                except Iamport.ResponseError as e:  # 취소시 오류 예외처리(이미 취소된 결제는 에러가 발생함)
+                    print(e.code)
+                    print(e.message)  # 에러난 이유를 알 수 있음
+                    return JsonResponse({}, status=500)
+                except Iamport.HttpError as http_error:
+                    print(http_error.code)
+                    print(http_error.reason)  # HTTP not 200 에러난 이유를 알 수 있음
+                    return JsonResponse({}, status=500)
+
+            except ObjectDoesNotExist:
+                print('DB 주문 트랜잭션 찾을 수 없음')
+                return JsonResponse({}, status=500)
 
         except ObjectDoesNotExist:
             print('DB 주문 정보 찾을 수 없음')
