@@ -1,25 +1,39 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-<h4> 주문 내역 </h4>
-<table>
+<h4>주문 내역</h4>
+<hr>
+{% if order_list %}
+<table class="table table-borderless table-hover text-center">
     <tr>
-        <th>1</th>
-        <th>2</th>
-        <th>3</th>
-        <th>4</th>
-        <th>5</th>
+        <th>주문 번호</th>
+        <th>주문 일자</th>
+        <th>상품 명</th>
+        <th>주문 상태</th>
+        <th>총 계</th>
+        <th></th>
     </tr>
-    {% for order in order_list.all %}
-        <tr>
-            <td>{{ order.created_at }}</td>
-            <td>{{ order }}</td>
-            <td>{{ order.order_transaction.paid_at }}</td>
-            <td>{{ order.order_transaction.status }}</td>
-            <td><button class="btn btn-sm btn-danger" onclick="paymentCancel({{ order.pk }});">결제 취소</button></td>
-        </tr>
+    {% for order in order_list %}
+    <tr>
+        <td onclick="location.href='{% url 'orderapp:complete' pk=order.pk %}'">{{ order.order_transaction.merchant_uid }}</td>
+        <td>{{ order.order_transaction.paid_at }}</td>
+        <td onclick="location.href='{% url 'orderapp:complete' pk=order.pk %}'">{{ order.order_transaction.name }}</td>
+        <td>{{ order.order_transaction.status }}</td>
+        <td>{{ order.order_transaction.amount }}</td>
+        <td>
+            {% if order.order_transaction.status == 'paid' %}
+                <button class="btn btn-sm btn-danger" onclick="paymentCancel({{ order.pk }})">결제 취소</button>
+            {% else %}
+                <button class="btn btn-sm btn-success">배송 현황(구현 안함)</button>
+            {% endif %}
+        </td>
+    </tr>
     {% endfor %}
 </table>
+{% else %}
+    <h4 class="text-center">아직 아무것도 없네요!</h4>
+{% endif %}
+<hr>
 <script>
     function paymentCancel(order_id){
         $.post('{% url 'orderapp:paymentCancel' %}',

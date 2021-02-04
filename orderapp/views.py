@@ -2,10 +2,9 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse
-from django.shortcuts import render
 from django.utils import timezone
 from django.utils.decorators import method_decorator
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 from iamport import Iamport
 
 from addressapp.models import UserAddress
@@ -20,7 +19,7 @@ USER_HAS_ORDER_OWNERSHIP = [order_ownership, login_required]
 IAMPORT = Iamport(imp_key=settings.IAMPORT_KEY, imp_secret=settings.IAMPORT_SECRET)
 
 #  주문서를 출력할 view
-method_decorator(USER_HAS_ORDER_OWNERSHIP, 'get')
+method_decorator(login_required, 'get')
 class OrderListView(ListView):
     model = Cart
     context_object_name = 'target_order'
@@ -74,6 +73,7 @@ def orderCreateView(request):
 
 #  iamport에 결제가 되었는지 확인한 후 결과를 저장함
 #    - ajax로 호출됨(paymentCheck())
+@login_required
 def orderPaymentCheck(request):
     if request.method == 'POST':
 
@@ -91,6 +91,7 @@ def orderPaymentCheck(request):
                     order=order,
                     imp_uid=response['imp_uid'],
                     merchant_uid=response['merchant_uid'],
+                    name=response['name'],
                     amount=response['amount'],
                     paid_at=response['paid_at'],
                     status=response['status'],
@@ -102,13 +103,18 @@ def orderPaymentCheck(request):
                     failed_at=response['failed_at']
                 )
                 new_order_transaction.save()
-                return JsonResponse({'order_id': order.pk}, status=200)  # redirect ?
+
+                #  장바구니안의 모든 상품 삭제(장바구니 비우기)
+                Cart.objects.get(user=request.user).cart_item.all().delete()
+
+                return JsonResponse({'order_id': order.pk}, status=200)
 
         except ObjectDoesNotExist:
             print('DB 주문 정보 찾을 수 없음')
             return JsonResponse({}, status=500)
 
 #  결제과정에서 취소된 경우 해당 주문 model 삭제
+@login_required
 def orderPaymentError(request):
     if request.method == 'POST':
         try:
@@ -122,6 +128,7 @@ def orderPaymentError(request):
 
 
 #  User의 주문 내역 List View
+@method_decorator(login_required, 'get')
 class UserOrderListView(ListView):
     context_object_name = 'order_list'
     template_name = 'orderapp/list.html'
@@ -171,3 +178,10 @@ def orderPaymentCancel(request):
         except ObjectDoesNotExist:
             print('DB 주문 정보 찾을 수 없음')
             return JsonResponse({}, status=500)
+
+
+@method_decorator(USER_HAS_ORDER_OWNERSHIP, 'get')
+class OrderDetailView(DetailView):
+    model = Order
+    context_object_name = 'target_order'
+    template_name = 'orderapp/detail.html'

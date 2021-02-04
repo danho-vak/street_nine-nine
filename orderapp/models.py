@@ -46,6 +46,7 @@ class OrderTransaction(models.Model):
     order = models.OneToOneField(Order, related_name='order_transaction', on_delete=models.CASCADE)
     imp_uid = models.CharField(max_length=100, null=False, blank=False)
     merchant_uid = models.CharField(max_length=100, null=False, blank=False)
+    name = models.CharField(max_length=50, null=False, blank=False)
     amount = models.IntegerField(null=False, blank=False)
     paid_at = models.CharField(max_length=100, null=True, blank=True)
     status = models.CharField(max_length=100, null=False, blank=False)

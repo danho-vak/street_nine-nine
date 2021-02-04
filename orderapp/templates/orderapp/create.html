@@ -80,6 +80,7 @@
         });
     }
 
+    // 사용자가 결제를 취소할 경우 주문 내역을 삭제하는 script
     function paymentError(merchant_uid){
         $.ajax({
             url : '{% url 'orderapp:paymentError' %}',

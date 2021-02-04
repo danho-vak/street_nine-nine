@@ -7,7 +7,7 @@ from orderapp.models import Order
 def order_ownership(func):
     def decorated(request, *args, **kwargs):
         try:
-            order = Order.objects.get(user=request.user)
+            order = Order.objects.filter(user=request.user)
         except ObjectDoesNotExist:
             order = None
 

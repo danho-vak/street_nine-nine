@@ -4,8 +4,16 @@
 {% block content %}
 
 {% include 'cartapp/snippets/cart_item_list.html' %}
-<div class="text-right">
-    <button class="btn btn-secondary" onclick="deleteCartItem();">선택 삭제</button>
-    <button class="btn btn-primary" onclick="location.href='{% url 'orderapp:list' %}'">구매하기</button>
-</div>
+
+{% if target_cart.cart_item.all %}
+    <div class="text-right">
+        <button class="btn btn-secondary" onclick="deleteCartItem();">선택 삭제</button>
+        <button class="btn btn-primary" onclick="location.href='{% url 'orderapp:list' %}'">구매하기</button>
+    </div>
+{% else %}
+    <hr>
+    <div class="text-center">
+        <button class="btn btn-primary" onclick="location.href='{% url 'storeapp:index' %}'">쇼핑하러 가기</button>
+    </div>
+{% endif %}
 {% endblock %}
