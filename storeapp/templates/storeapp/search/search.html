@@ -1,8 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
-{% load imagekit %}
 {% block content %}
-
+<h4>검색 결과 : {{ product_list|length }}</h4>
+<hr>
 {% include 'storeapp/snippets/product_list.html' with product_list=product_list %}
-
 {% endblock %}

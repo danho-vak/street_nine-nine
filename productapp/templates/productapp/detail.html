@@ -58,12 +58,19 @@
     </tr>
     <tr>
         <td>
-            {{ target_product.product_option.first.p_product_option_class_1 }}
+            <select name="option_1" id="option_1">
+                <option value="">옵션을 선택해주세요</option>
+                {% for option in target_product.product_option.all %}
+                <option value="{{ option.p_product_option_class_1 }}">{{ option.p_product_option_class_1 }}</option>
+                {% endfor %}
+            </select>
         </td>
     </tr>
     <tr>
         <td>
-            {{ target_product.product_option.first.p_product_option_class_2 }}
+            <select name="option_2" id="option_2">
+                <option value="">하위 옵션을 선택해주세요</option>
+            </select>
         </td>
     </tr>
     <tr>
@@ -94,6 +101,23 @@
 <script>
     $('.carousel-inner').children(':first-child').attr('class', 'carousel-item active');
     $('.carousel-indicators').children(':first-child').attr('class', 'active');
+
+    var option_2 = '{{ target_product.product_option.first.p_product_option_class_2 }}'.split(';');
+
+
+    // 상위 옵션 선택시 하위 옵션 append하는 script
+    $('#option_1').change(function(){
+        if ($('#option_1').val() === ''){
+            $('#option_2').empty();
+            $('#option_2').append('<option value="">하위 옵션을 선택해주세요</option>');
+        }else{
+            $('#option_2').empty();
+            $('#option_2').append('<option value="">하위 옵션을 선택해주세요</option>');
+            option_2.forEach(function (option) {
+                $('#option_2').append('<option value='+option+'>'+option+'</option>');
+            });
+        }
+    });
 </script>
 
 {% endblock %}

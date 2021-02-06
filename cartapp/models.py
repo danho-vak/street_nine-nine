@@ -21,7 +21,8 @@ class Cart(models.Model):
 class CartItem(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='cart_item')
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='cart_product')
-    product_option = models.ForeignKey(ProductOption, on_delete=models.CASCADE, related_name='cart_product_option')
+    product_option_1 = models.CharField(max_length=20, null=False, blank=False)
+    product_option_2 = models.CharField(max_length=20, null=False, blank=False)
     quantity = models.IntegerField(default=0)
 
     # 상품 가격 * 수량

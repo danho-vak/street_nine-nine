@@ -55,7 +55,8 @@ def orderCreateView(request):
                     new_order_item = OrderItem(
                         order=order,
                         product=item.product,
-                        product_option=item.product_option,
+                        product_option_1=item.product_option_1,
+                        product_option_2=item.product_option_2,
                         quantity=item.quantity
                     )
                     new_order_item.save()

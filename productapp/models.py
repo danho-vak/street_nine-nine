@@ -23,6 +23,8 @@ class Product(models.Model):
     def __str__(self):
         return self.product_title
 
+    class Meta:
+        ordering = ['-product_created_at']
 
 '''
     상품의 썸네일을 저장할 model
@@ -62,6 +64,9 @@ class ProductDetailImage(models.Model):
 class ProductCategory(models.Model):
     category_parent = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True)  # 계층적 구조
     category_name = models.CharField(max_length=20)
+
+
+
 
     def __str__(self):
         return '{} > {}'.format(self.category_parent, self.category_name)

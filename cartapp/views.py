@@ -37,6 +37,8 @@ def CartItemCreateView(request):
     if request.method == 'POST':
         user = request.user
         product_id = request.POST.get('product_id', None)
+        option_1 = request.POST.get('option_1', None)
+        option_2 = request.POST.get('option_2', None)
         quantity = request.POST.get('quantity', 0)
         try:
             cart = Cart.objects.get(user=user)
@@ -52,7 +54,8 @@ def CartItemCreateView(request):
                 new_item = CartItem(
                     cart=cart,
                     product=product,
-                    product_option=product_option,
+                    product_option_1=option_1,
+                    product_option_2=option_2,
                     quantity=quantity
                 )
                 new_item.save()
