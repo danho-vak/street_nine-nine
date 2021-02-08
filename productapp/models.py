@@ -54,7 +54,7 @@ class ProductDetailImage(models.Model):
                                             on_delete=models.CASCADE,
                                             related_name='product_detail_images',
                                             verbose_name='p_target_product_id')
-    p_detail_image = models.ImageField(upload_to='ProductDetailImages', blank=False, null=False)
+    p_detail_image = models.ImageField(upload_to='product_detail_images', blank=False, null=False)
 
 
 '''
