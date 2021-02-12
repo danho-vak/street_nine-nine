@@ -8,7 +8,7 @@ class Review(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, name='review_user')
     product = models.ForeignKey(Product, on_delete=models.CASCADE, name='review_product')
     content = models.CharField(max_length=300, null=False, blank=False)
-    product_rate = models.IntegerField(null=False, blank=False)
+    product_rate = models.PositiveIntegerField(null=False, blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

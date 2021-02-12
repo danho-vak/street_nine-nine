@@ -1,0 +1,27 @@
+<form action="{% url 'reviewapp:create' %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <div class="card mb-3" style="max-width: 540px;">
+        <div class="row no-gutters">
+            <div class="col-md-8">
+                <div class="card-body">
+                <!--        <h5 class="card-title">Card title</h5>-->
+                    <p class="card-text">
+                        <label for="id_content">Content:</label>
+                        <input type="text" name="content" maxlength="300" required="" id="id_content">
+                    </p>
+                    <p class="card-text">
+                        <label for="id_product_rate">Product rate:</label>
+                        <input type="number" name="product_rate" required="" id="id_product_rate">
+                    </p>
+                    <p class="card-text">
+                        <label for="id_review_image">Review image:</label>
+                        <input type="file" name="review_image" id="id_review_image" multiple="multiple">
+                    </p>
+                    <input type="hidden" name="product_pk" value="{{ target_product.pk }}">
+                    <input type="submit" class="btn btn-primary" value="리뷰 등록">
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

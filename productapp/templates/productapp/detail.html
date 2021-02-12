@@ -97,6 +97,12 @@
         </td>
     </tr>
 </table>
+
+<!-- include review -->
+
+{% include 'reviewapp/create.html'%}
+
+{% include 'reviewapp/list.html' with review_list=target_product.review_set.all %}
 <script src="{% static 'js/cartapp/cart.js' %}"></script>
 <script>
     $('.carousel-inner').children(':first-child').attr('class', 'carousel-item active');

@@ -5,13 +5,14 @@ from django.shortcuts import redirect
 from django.urls import reverse_lazy, reverse
 from django.utils.decorators import method_decorator
 from django.views.generic import CreateView, DetailView, DeleteView, UpdateView
+from django.views.generic.edit import FormMixin
 from multi_form_view import MultiFormView
 
 from productapp.decorator import user_is_admin
 from productapp.forms import ProductCreationForm, ProductThumbnailCreationForm, ProductCategoryCreationForm, \
     ProductDetailImageCreationForm, ProductOptionCreationForm
 from productapp.models import Product, ProductThumbnailImage, ProductCategory, ProductDetailImage
-
+from reviewapp.forms import ReviewCreationForm
 
 CHECK_AUTHENTICATION = [login_required, user_is_admin]
 
@@ -91,10 +92,12 @@ class ProductCreateView(MultiFormView):
 #
 # 상품 상세페이지 view
 #
-class ProductDetailView(DetailView):
+class ProductDetailView(DetailView, FormMixin):
     model = Product
     context_object_name = 'target_product'
+    form_class = ReviewCreationForm
     template_name = 'productapp/detail.html'
+
 
 
 #
