@@ -6,12 +6,13 @@
     <div class="row no-gutters">
         <div class="col-md-4">
             {% if review.review_detail_image.all %}
-                {% thumbnail '100x50' review.review_detail_image.first.review_detail_image %}
+                {% thumbnail '180x200' review.review_detail_image.first.review_detail_image %}
+            {% else %}
+                <img src="{% static 'images/base/default_image.jpg' %}" width="180" height="200">
             {% endif %}
         </div>
         <div class="col-md-8">
             <div class="card-body">
-            <!--        <h5 class="card-title">Card title</h5>-->
                 <p class="card-text">{{ review.content }}</p>
                 <p class="card-text"><small class="text-muted">{{ review.product_rate }}</small></p>
                 <p class="card-text"><small class="text-muted">{{ review.created_at }}</small></p>

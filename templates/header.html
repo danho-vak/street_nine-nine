@@ -23,6 +23,9 @@
                     <a class="nav-link" href="{% url 'accountapp:detail' pk=user.pk %}">user is : {{ user.username }}</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" href="{% url 'accountapp:logout' %}">로그아웃</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="{% url 'cartapp:list' %}">장바구니</a>
                 </li>
                 {% else %}

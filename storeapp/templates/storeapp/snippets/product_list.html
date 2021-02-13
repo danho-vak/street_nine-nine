@@ -3,18 +3,18 @@
     {% for item in product_list %}
         <div class="col mx-4 my-4" style="max-width: 18rem;">
             <a href="{% url 'productapp:detail' pk=item.pk %}">
-                <div class="card" style="width: 18rem;">
+                <div class="card" style="width: 18rem; height:24rem;">
                     <div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel">
                         <div class="carousel-inner">
                             {% for thumb in item.product_thumbnails.all %}
                                 {% if thumb == item.product_thumbnails.first %}
                                     True
                                     <div class="carousel-item active">
-                                        <img src="{{ thumb.p_thumbnail.url }}" class="card-img-top d-block w-100" alt="...">
+                                        <img src="{{ thumb.p_thumbnail.url }}" class="card-img-top d-block w-100 h-100">
                                     </div>
                                 {% else %}
                                     <div class="carousel-item">
-                                        <img src="{{ thumb.p_thumbnail.url }}" class="card-img-top d-block w-100" alt="...">
+                                        <img src="{{ thumb.p_thumbnail.url }}" class="card-img-top d-block w-100 h-100">
                                     </div>
                                 {% endif %}
                             {% endfor %}

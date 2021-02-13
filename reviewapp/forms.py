@@ -6,5 +6,5 @@ from reviewapp.models import Review
 class ReviewCreationForm(ModelForm):
     class Meta:
         model = Review
-        fields = '__all__'
+        fields = ['content', 'product_rate']
         exclude = ['user', 'product']
