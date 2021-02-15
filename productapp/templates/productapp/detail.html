@@ -5,7 +5,7 @@
 
 <table class="table text-center">
     <tr>
-        <td rowspan="8">
+        <td rowspan="9">
             <div id="carouselExampleIndicators" class="carousel slide carousel-fade" data-ride="carousel">
                 <ol class="carousel-indicators">
                     {% for thumb in target_product.product_thumbnails.all %}
@@ -74,6 +74,13 @@
         </td>
     </tr>
     <tr>
+        <td>
+            {% if user.is_authenticated %}
+                <button class="btn btn-success" onclick="addCartItem();">장바구니에 추가</button>
+            {% endif %}
+        </td>
+    </tr>
+    <tr>
         <td colspan="2">
             {% for detail_image in target_product.product_detail_images.all %}
                 <img src="{{ detail_image.p_detail_image.url }}" width="1024" height="2068">
@@ -87,12 +94,9 @@
     </tr>
     <tr>
         <td>
-            {% if user.is_authenticated %}
-                <button class="btn btn-success" onclick="addCartItem();">장바구니에 추가</button>
-                {% if user.is_admin %}
-                    <button class="btn btn-warning" onclick="location.href='{% url 'productapp:update' pk=target_product.pk%}'">상품 수정하기</button>
-                    <button class="btn btn-danger" onclick="location.href='{% url 'productapp:delete' pk=target_product.pk%}'">상품 삭제하기</button>
-                {% endif %}
+            {% if user.is_admin %}
+                <button class="btn btn-warning" onclick="location.href='{% url 'productapp:update' pk=target_product.pk%}'">상품 수정하기</button>
+                <button class="btn btn-danger" onclick="location.href='{% url 'productapp:delete' pk=target_product.pk%}'">상품 삭제하기</button>
             {% endif %}
         </td>
     </tr>
