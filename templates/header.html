@@ -1,29 +1,21 @@
-<nav class="navbar navbar-dark bg-dark navbar-expand-lg">
+<nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="{% url 'storeapp:index' %}">STREET 99</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">Home</a>
-                </li>
-                <li class="nav-item">
-                    <form class="d-flex" action="{% url 'storeapp:search' %}">
-                        <input class="form-control me-2" name="q" type="search" placeholder="Search" aria-label="Search" required>
-                        <button class="btn btn-outline-success" type="submit">Search</button>
-                    </form>
-                </li>
+
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+            <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
                 {% if user.is_authenticated %}
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'accountapp:detail' pk=user.pk %}">user is : {{ user.username }}</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'accountapp:logout' %}">로그아웃</a>
+                    <a class="nav-link" href="{% url 'cartapp:list' %}">장바구니</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'cartapp:list' %}">장바구니</a>
+                    <a class="nav-link disable" href="{% url 'accountapp:logout' %}">로그아웃</a>
                 </li>
                 {% else %}
                 <li class="nav-item">
@@ -35,7 +27,26 @@
                         <a class="nav-link" href="{% url 'productapp:create' %}">상품 등록</a>
                     {% endif %}
                 </li>
+                <li class="nav-item">
+                    <form class="d-flex" action="{% url 'storeapp:search' %}">
+                        <input class="form-control me-2" name="q" type="search" placeholder="Search" aria-label="Search" required>
+                        <button class="btn btn-outline-success" type="submit">Search</button>
+                    </form>
+                </li>
             </ul>
         </div>
     </div>
+</nav>
+
+<nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 py-2">
+  <a class="navbar-brand col-md-3 col-lg-2 mr-0 px-3" href="/">Street99</a>
+  <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-toggle="collapse" data-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">
+  <ul class="navbar-nav px-3">
+    <li class="nav-item text-nowrap">
+      <a class="nav-link" href="#">Sign out</a>
+    </li>
+  </ul>
 </nav>

@@ -1,14 +1,20 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-{% include 'head.html' %}
-<body class="bg-white">
-{% include 'header.html' %}
+    {% include 'head.html' %}
+    <body>
+        <div class="container-fluid">
+            <div class="row">
 
-<div class="container">
-    {% block content %}
-    {% endblock %}
-</div>
+            {% include 'snb.html' %}
 
-{% include 'footer.html' %}
-</body>
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+                <div class="container pt-4 mt-4">
+                    {% block content %}
+                    {% endblock %}
+                </div>
+            </main>
+
+            </div>
+        </div>
+    </body>
 </html>

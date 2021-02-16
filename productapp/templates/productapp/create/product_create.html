@@ -53,6 +53,7 @@
         })
     });
 
+    // 상품 option 등록시 정규표현식을 통해 세미콜론만 받을 수 있도록 걸러내는 script
     $('#id_p_product_option_class_2').keyup(function(e) {
         var optionValueCheck = /[~!@\#$%^&*\()\-=+_'\[\]{}]/gi;
         var optionVal = $("#id_p_product_option_class_2");
