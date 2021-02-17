@@ -25,10 +25,15 @@ class ProductCategoryCreateView(CreateView):
     model = ProductCategory
     form_class = ProductCategoryCreationForm
     template_name = 'productapp/create/product_category_create.html'
-    success_url = reverse_lazy('storeapp:index')
+    success_url = reverse_lazy('productapp:categoryCreate')
 
     def form_valid(self, form):
         return super(ProductCategoryCreateView, self).form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['category_list'] = ProductCategory.objects.all()
+        return context
 
 
 #
@@ -59,11 +64,12 @@ class ProductCreateView(MultiFormView):
         product = forms['ProductCreationForm'].save(commit=False)
         thumb_list = self.request.FILES.getlist('p_thumbnail', None)
         detail_list = self.request.FILES.getlist('p_detail_image', None)
-        category_parent = self.request.POST.get('category_parent', None)
+        category_code = self.request.POST.get('category_code', None)
 
-        if category_parent:
-            category = ProductCategory.objects.get(pk=category_parent)
-            print(category)
+
+        # 넘겨받은 category_code로 category를 특정한 후 product에 연결한 뒤 저장
+        if category_code:
+            category = ProductCategory.objects.get(category_code=category_code)
             product.product_category = category
             product.save()
 

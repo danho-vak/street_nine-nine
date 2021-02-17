@@ -62,14 +62,11 @@ class ProductDetailImage(models.Model):
         Product와 N:1(ProductCategory) 관계로 설정
 '''
 class ProductCategory(models.Model):
-    category_parent = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True)  # 계층적 구조
-    category_name = models.CharField(max_length=20)
-
-
-
+    category_code = models.IntegerField(unique=True, null=False, blank=False)
+    category_name = models.CharField(max_length=20, null=False, blank=False)
 
     def __str__(self):
-        return '{} > {}'.format(self.category_parent, self.category_name)
+        return '{} : {}'.format(self.category_code, self.category_name)
 
 
 '''

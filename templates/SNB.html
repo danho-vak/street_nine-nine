@@ -63,7 +63,7 @@
         <ul class="nav flex-column text-center">
             <li class="nav-item">
                 <a class="nav-link active" href="/">
-                    <h1 class="text-muted">Street99<span class="sr-only">(current)</span></h1>
+                    <h1 class="text-dark">Street99<span class="sr-only">(current)</span></h1>
                 </a>
             </li>
             <li class="nav-item">
@@ -79,7 +79,7 @@
             <li class="nav-item">
                 <a class="nav-link" href="#outerCollapse" data-toggle="collapse" aria-expanded="false" aria-controls="outerCollapse">Outer</a>
                 <div class="collapse" id="outerCollapse">
-                    <a class="nav-link" href="#">전체</a>
+                    <a class="nav-link" href="{% url 'storeapp:searchByCategory' category_code=100 %}">전체</a>
                     <a class="nav-link" href="#">패딩</a>
                     <a class="nav-link" href="#">자켓/블레이져</a>
                     <a class="nav-link" href="#">MA-1/블루종</a>
@@ -135,5 +135,16 @@
                 </li>
             {% endif %}
         </ul>
+
+        {% if user.is_admin %}
+        <h6 class="sidebar-heading text-center px-3 mt-4 mb-1 text-muted">
+            <span>관리자 : {{ user.username }}님 </span>
+        </h6>
+        <ul class="nav flex-column mb-2 text-center">
+            <li class="nav-item">
+                <a class="nav-link disable" href="{% url 'productapp:create' %}">상품등록</a>
+            </li>
+        </ul>
+        {% endif %}
     </div>
 </nav>

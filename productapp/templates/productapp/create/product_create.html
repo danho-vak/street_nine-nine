@@ -10,15 +10,8 @@
             </th>
             <td>
                 <div id="product_category_container">
-                    <select id="large_category" required>
-                        <option value="">선택 없음</option>
-                    </select>
-
-                    <select id="medium_category" required>
-                        <option value="">선택 없음</option>
-                    </select>
-
-                    <select id="small_category" required>
+                    <input type="text" id="category_code_disabled" disabled size="5">
+                    <select id="category_select" required>
                         <option value="">선택 없음</option>
                     </select>
                 </div>
@@ -37,8 +30,7 @@
                 {{ forms.ProductOptionCreationForm.as_table }}
             </td>
             <td>
-                <input type="hidden" name="category_parent" id="category_parent" value="">
-                <input type="hidden" name="category_name" id="category_name" value="">
+                <input type="hidden" name="category_code" id="category_code" value="">
                 <input class="btn btn-primary" type="submit" value="등록">
             </td>
         </tr>
@@ -68,33 +60,22 @@
         $('#id_product_sale_id').val($('#id_product_id').val() + $('#id_product_code').val());
     });
 
-    $('#large_category').change(function(){  // 대->중 카테고리 이벤트 등록
-        medium_categories = data.filter(obj => obj.category_parent_id == this.value);
-        $('#medium_category').empty().append('<option value="">선택 없음</option>');
-        set_category(medium_categories, 'medium_category');
-    });
-
-    $('#medium_category').change(function(){  // 중->소 카테고리 이벤트 등록
-        small_categories = data.filter(obj => obj.category_parent_id == this.value);
-        $('#small_category').empty().append('<option value="">선택 없음</option>');
-        set_category(small_categories, 'small_category');
-    });
-
-    $('#small_category').change(function(){
-        category_name = $('#small_category').find(':selected').text();
-        $('#category_parent').val(this.value);
-        $('#category_name').val(category_name);
-    });
-
     data = {{ category_list | safe }};
 
-    set_category(data.filter(obj => obj.category_parent_id == null), 'large_category'); // 대분류 카테고리 설정
+    set_category(data.filter(obj => obj.category_parent_id == null), 'category_select'); // 대분류 카테고리 설정
 
     function set_category(data, target_object){
 
         for (var i=0; i<data.length; i++){
-            $('#'+target_object).append('<option value='+data[i].id+'>'+data[i].category_name+'</option>');
+            $('#'+target_object).append('<option value='+data[i].category_code+'>'+data[i].category_name+'</option>');
         }
     }
+
+    $('#category_select').change(function(){
+        category_name = $('#category_select').find(':selected').text();
+        $('#category_code_disabled').val(this.value);
+        $('#category_code').val(this.value);
+    });
+
 </script>
 {% endblock %}
