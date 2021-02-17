@@ -36,10 +36,17 @@ class StoreCategoryResultView(ListView):
         target_category = self.kwargs['category_code']
 
         if (target_category == 100) or (target_category == 200) or (target_category == 300) or (target_category == 400):
-            print(Product.objects.all().select_related('product_category').filter(category_code__startswith=str(target_category)[:1]))
-            context['product_list'] = ProductCategory.objects.filter(category_code__startswith=str(target_category)[:1])
+
+            # 이 쿼리와 아래 쿼리의 차이를 확인하자.
+            # select_related()한 쿼리는 ProductCategory Table의 컬럼도 다 select 함
+            # 하지만 아래 select_related()를 생략한 쿼리는 Product Table만 select함
+            # context['product_list'] = Product.objects\
+            #                                 .select_related('product_category')\
+            #                                 .filter(product_category__category_code__startswith=str(target_category)[:1])
+
+            context['product_list'] = Product.objects.filter(product_category__category_code__startswith=str(target_category)[:1])\
+                                                        .order_by('-product_created_at')
         else:
-            print(ProductCategory.objects.filter(category_code=target_category))
-            context['product_list'] = ProductCategory.objects.filter(category_code=target_category)
+            context['product_list'] = Product.objects.filter(product_category__category_code=target_category).order_by('-product_created_at')
 
         return context
