@@ -49,14 +49,14 @@ class OrderTransaction(models.Model):
     merchant_uid = models.CharField(max_length=100, null=False, blank=False)
     name = models.CharField(max_length=50, null=False, blank=False)
     amount = models.IntegerField(null=False, blank=False)
-    paid_at = models.CharField(max_length=100, null=True, blank=True)
+    paid_at = models.DateTimeField(null=True, blank=True)
     status = models.CharField(max_length=100, null=False, blank=False)
     cancel_amount = models.IntegerField(null=True, blank=True)
     cancel_history = models.CharField(max_length=100, null=True, blank=True)
     cancel_reason = models.CharField(max_length=100, null=True, blank=True)
-    cancelled_at = models.CharField(max_length=100, null=True, blank=True)
+    cancelled_at = models.DateTimeField(null=True, blank=True)
     fail_reason = models.CharField(max_length=100, null=True, blank=True)
-    failed_at = models.CharField(max_length=100, null=True, blank=True)
+    failed_at = models.DateTimeField(null=True, blank=True)
 
 
 IAMPORT = Iamport(imp_key=settings.IAMPORT_KEY, imp_secret=settings.IAMPORT_SECRET)

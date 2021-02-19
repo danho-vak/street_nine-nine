@@ -30,7 +30,7 @@
     // 상품 가지수 별 iamport결제시 출력될 상품명 설정하는 script
     function productCount(){
         var rows = document.getElementsByName('cart_item_checkbox').length;
-        var first_product_name = $('body > div.container > table.table.table-borderless > tbody > tr:nth-child(2) > td:nth-child(3) > a').text().trim();
+        var first_product_name = $('table.table.table-borderless > tbody > tr:nth-child(2) > td:nth-child(3) > a').text().trim();
         if (rows > 1) {
             return first_product_name +'외 ' + String(rows-1) + '건'
         } else {
@@ -72,8 +72,7 @@
                 'merchant_uid' : merchant_uid,
                 'amount' : amount
             }, success : function (data){
-                console.log(data);
-                console.log(data['order_id']);
+                location.href='{% url 'orderapp:orderList' %}';
             }, error : function (err, status) {
                 alert(err+' : '+status);
             }

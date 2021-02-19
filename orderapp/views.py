@@ -1,9 +1,12 @@
+from datetime import datetime
+
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse
 from django.utils import timezone
 from django.utils.decorators import method_decorator
+from django.utils.timezone import make_aware
 from django.views.generic import ListView, DetailView
 from iamport import Iamport
 
@@ -88,20 +91,21 @@ def orderPaymentCheck(request):
 
             #  iamport에 결제됬다면 DB에 해당 내용 저장
             if is_paid:
+                # make_aware(datetime.fromtimestap()) 는 넘겨받은 unix timestamp를 django DateTimeField에 맞게 캐스팅
                 new_order_transaction = OrderTransaction(
                     order=order,
                     imp_uid=response['imp_uid'],
                     merchant_uid=response['merchant_uid'],
                     name=response['name'],
                     amount=response['amount'],
-                    paid_at=response['paid_at'],
+                    paid_at=make_aware(datetime.fromtimestamp(response['paid_at'])),
                     status=response['status'],
                     cancel_amount=response['cancel_amount'],
                     cancel_history=response['cancel_history'],
                     cancel_reason=response['cancel_reason'],
-                    cancelled_at=response['cancelled_at'],
+                    cancelled_at=make_aware(datetime.fromtimestamp(response['paid_at'])),
                     fail_reason=response['fail_reason'],
-                    failed_at=response['failed_at']
+                    failed_at=make_aware(datetime.fromtimestamp(response['paid_at'])),
                 )
                 new_order_transaction.save()
 
