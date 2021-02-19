@@ -1,4 +1,5 @@
-from django.forms import ModelForm, Select
+from django.forms import ModelForm
+from django.utils.translation import gettext_lazy as _
 from productapp.models import Product, ProductThumbnailImage, ProductCategory, ProductDetailImage, ProductOption
 
 
@@ -13,10 +14,23 @@ class ProductCreationForm(ModelForm):
         model = Product
         fields = '__all__'
         exclude = ['product_category']
+        labels = {
+            'product_id': _('상품 ID'),
+            'product_code': _('상품 코드'),
+            'product_sale_id': _('상품 판매 코드(자동 기입)'),
+            'product_title': _('상품 명'),
+            'product_origin_price': _('상품 원가'),
+            'product_sale_price': _('상품 판매가'),
+            'product_description': _('상품 설명'),
+            'product_is_display': _('상품 전시 여부'),
+        }
 
     def __init__(self, *args, **kwargs):
         super(ProductCreationForm, self).__init__(*args, **kwargs)
+        for field_name in self.fields:
+            self.fields[field_name].widget.attrs.update({'class': 'form-control form-control-sm'})
         self.fields['product_sale_id'].widget.attrs.update({'disabled': 'disabled'})
+        self.fields['product_is_display'].widget.attrs.update({'class': ''})
 
 '''
     상품의 썸네일을 저장할 form
@@ -28,6 +42,9 @@ class ProductThumbnailCreationForm(ModelForm):
         model = ProductThumbnailImage
         fields = ['p_thumbnail']
         exclude = ['p_target_product_id']
+        labels = {
+            'p_thumbnail': _('상품 썸네일')
+        }
 
     def __init__(self, *args, **kwargs):
         super(ProductThumbnailCreationForm, self).__init__(*args, **kwargs)
@@ -43,6 +60,9 @@ class ProductDetailImageCreationForm(ModelForm):
         model = ProductDetailImage
         fields = ['p_detail_image']
         exclude = ['p_target_product_id']
+        labels = {
+            'p_detail_image': _('상품 상세이미지')
+        }
 
     def __init__(self, *args, **kwargs):
         super(ProductDetailImageCreationForm, self).__init__(*args, **kwargs)
@@ -56,3 +76,12 @@ class ProductOptionCreationForm(ModelForm):
         model = ProductOption
         fields = ['p_product_option_class_1', 'p_product_option_class_2']
         exclude = ['p_target_product_id']
+        labels = {
+            'p_product_option_class_1': _('상품 상위 옵션'),
+            'p_product_option_class_2': _('상품 하위 옵션'),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super(ProductOptionCreationForm, self).__init__(*args, **kwargs)
+        for field_name in self.fields:
+            self.fields[field_name].widget.attrs.update({'class': 'form-control form-control-sm'})

@@ -1,40 +1,184 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <div class="text-center" style="padding:10% 0 0 0;">
+<style>
+
+.form-signin {
+  width: 100%;
+  max-width: 420px;
+  padding: 15px;
+  margin: auto;
+}
+
+.form-label-group {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.form-label-group input,
+.form-label-group label {
+  height: 3.125rem;
+  padding: .75rem;
+}
+
+.form-label-group label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  width: 100%;
+  margin-bottom: 0; /* Override default `<label>` margin */
+  line-height: 1.5;
+  color: #495057;
+  pointer-events: none;
+  cursor: text; /* Match the input under the label */
+  border: 1px solid transparent;
+  border-radius: .25rem;
+  transition: all .1s ease-in-out;
+}
+
+.form-label-group input::-webkit-input-placeholder {
+  color: transparent;
+}
+
+.form-label-group input::-moz-placeholder {
+  color: transparent;
+}
+
+.form-label-group input:-ms-input-placeholder {
+  color: transparent;
+}
+
+.form-label-group input::-ms-input-placeholder {
+  color: transparent;
+}
+
+.form-label-group input::placeholder {
+  color: transparent;
+}
+
+.form-label-group input:not(:-moz-placeholder-shown) {
+  padding-top: 1.25rem;
+  padding-bottom: .25rem;
+}
+
+.form-label-group input:not(:-ms-input-placeholder) {
+  padding-top: 1.25rem;
+  padding-bottom: .25rem;
+}
+
+.form-label-group input:not(:placeholder-shown) {
+  padding-top: 1.25rem;
+  padding-bottom: .25rem;
+}
+
+.form-label-group input:not(:-moz-placeholder-shown) ~ label {
+  padding-top: .25rem;
+  padding-bottom: .25rem;
+  font-size: 12px;
+  color: #777;
+}
+
+.form-label-group input:not(:-ms-input-placeholder) ~ label {
+  padding-top: .25rem;
+  padding-bottom: .25rem;
+  font-size: 12px;
+  color: #777;
+}
+
+.form-label-group input:not(:placeholder-shown) ~ label {
+  padding-top: .25rem;
+  padding-bottom: .25rem;
+  font-size: 12px;
+  color: #777;
+}
+
+.form-label-group input:-webkit-autofill ~ label {
+  padding-top: .25rem;
+  padding-bottom: .25rem;
+  font-size: 12px;
+  color: #777;
+}
+
+/* Fallback for Edge
+-------------------------------------------------- */
+@supports (-ms-ime-align: auto) {
+  .form-label-group {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column-reverse;
+    flex-direction: column-reverse;
+  }
+
+  .form-label-group label {
+    position: static;
+  }
+
+  .form-label-group input::-ms-input-placeholder {
+    color: #777;
+  }
+}
+</style>
+
+    <div>
         <form class="form-signin" action="{% url 'accountapp:create' %}" method="POST">
             {% csrf_token %}
 
-            <h1 class="h3 mb-3 font-weight-normal">환영해요!</h1>
+            <h1 class="h3 mb-3 font-weight-normal text-center">환영해요!</h1>
 
+            <div class="form-label-group">
+                <input type="email" name="email" id="id_email" class="form-control" placeholder="Email" required autofocus>
+                <label for="id_email">Email</label>
+            </div>
 
-            <label for="id_email" class="sr-only">Email</label>
-            <input type="email" name="email" id="id_email" class="form-control" placeholder="Email" required autofocus>
+            <div class="form-label-group">
+                <input type="text" name="username" id="id_username" class="form-control" placeholder="닉네임" required>
+                <label for="id_username">닉네임</label>
+            </div>
 
-            <label for="id_username" class="sr-only">닉네임</label>
-            <input type="text" name="username" id="id_username" class="form-control" placeholder="닉네임" required>
+            <div class="form-label-group">
+                <input type="password" name="password1" id="id_password1" class="form-control" placeholder="비밀번호" required>
+                <label for="id_password1">비밀번호</label>
+            </div>
 
-            <label for="id_password1" class="sr-only">비밀번호</label>
-            <input type="password" name="password1" id="id_password1" class="form-control" placeholder="비밀번호" required>
-            <div style="font-size:0.6rem;">
+            <div class="my-2 pb-4" style="font-size:0.8rem;">
                 {{ form.password1.help_text }}
             </div>
 
-            <label for="id_password2" class="sr-only">비밀번호 확인</label>
-            <input type="password" name="password2" id="id_password2" class="form-control" placeholder="비밀번호 확인" required>
-            <div style="font-size:0.7rem;">
-                {{ form.password2.help_text }}
+            <div class="form-label-group">
+                <input type="password" name="password2" id="id_password2" class="form-control" placeholder="비밀번호 확인" required>
+                <label for="id_password2" >비밀번호 확인</label>
             </div>
 
-            <label for="id_username" class="sr-only">전화번호</label>
-            <input type="text" name="phone_number" id="id_phone_number" class="form-control" placeholder="- 없이 입력" required>
+            <div class="my-2 pb-4" style="font-size:0.8rem;">
+                <div class="ml-4">
+                    {{ form.password2.help_text }}
+                </div>
+            </div>
 
 
-            <label for="id_username" class="sr-only">생년월일</label>
-            <input type="date" name="date_of_birth" id="id_date_of_birth" class="form-control" required>
+            <div class="form-label-group">
+                <input type="text" name="phone_number" id="id_phone_number" class="form-control" placeholder="- 없이 입력" required>
+                <label for="id_username">전화번호 ('-' 없이 입력)</label>
+            </div>
 
-
+            <div class="form-label-group">
+                <input type="date" name="date_of_birth" id="id_date_of_birth" class="form-control" required>
+                <label for="id_username">생년월일</label>
+            </div>
             <button class="btn btn-lg btn-primary btn-block mt-4" type="submit">회원가입</button>
         </form>
     </div>
+
+<script>
+    // 전화번호 입력시 정규표현식을 통해 숫자, '-'만 받을 수 있도록 걸러내는 script
+    $('#id_phone_number').keyup(function(e) {
+        var phone_value_check = /[~!@\#$%^&*\()\=+_-'\[\]{}a-zA-Z]/gi;
+        var phone_val = $("#id_phone_number");
+
+        if (phone_value_check.test(phone_val.val())) {
+            phone_val.val(phone_val.val().replace(phone_value_check,""));
+        }
+    });
+</script>
 {% endblock %}

@@ -8,7 +8,7 @@
         <th>총 계</th>
     </tr>
     {% for item in target_cart.cart_item.all %}
-    <tr>
+    <tr class="text-center border-top">
         <td rowspan="2">
             <input type="checkbox" name="cart_item_checkbox" id="cart_item_checkbox_{{ item.pk }}" value="{{ item.pk }}">
         </td>
@@ -21,12 +21,12 @@
         <td>{{ item.product.product_sale_price }}</td>
         <td>{{ item.sub_total }}</td>
     </tr>
-    <tr>
+    <tr class="text-center">
         <td>{{ item.product_option_1 }} : {{ item.product_option_2 }}</td>
         <td>
             <div class="input-group">
                 수량 :
-                <input class="form-control" type="number" id="cart_item_quantity_{{ item.pk }}" value="{{ item.quantity }}">
+                <input class="form-control form-control-sm ml-2" type="number" id="cart_item_quantity_{{ item.pk }}" value="{{ item.quantity }}">
                 <div class="input-group-append">
                     <button class="btn btn-sm btn-outline-secondary" onclick="changeQuantity({{ item.pk}}, {{ item.quantity }});">수정</button>
                 </div>
@@ -34,10 +34,10 @@
         </td>
     </tr>
     {% endfor %}
-    <tr>
+    <tr class="border-top">
         <td colspan="4"></td>
         <td class="sub_total">
-            합계: {{ target_cart.total_price }}
+            <b>합계: {{ target_cart.total_price }}</b>
         </td>
     </tr>
 </table>

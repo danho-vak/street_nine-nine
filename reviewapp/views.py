@@ -1,4 +1,4 @@
-from django.urls import reverse_lazy, reverse
+from django.urls import reverse
 from django.views.generic import CreateView
 
 from productapp.models import Product

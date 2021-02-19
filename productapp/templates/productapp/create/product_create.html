@@ -3,38 +3,31 @@
 {% block content %}
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    <table>
+    <table class="table table-hover">
         <tr>
             <th>
-                <label for="product_category_container">Product category:</label>
+                <label for="product_category_container">상품 카테고리:</label>
             </th>
             <td>
-                <div id="product_category_container">
-                    <input type="text" id="category_code_disabled" disabled size="5">
-                    <select id="category_select" required>
+                <div id="product_category_container" class="d-flex">
+                    <input class="form-control form-control-sm" type="text" id="category_code_disabled" disabled size="5">
+                    <select class="form-control form-control-sm" id="category_select" required>
                         <option value="">선택 없음</option>
                     </select>
+                    <input type="button" class="btn btn-primary btn-sm ml-4" onclick="location.href='{% url 'productapp:categoryCreate' %}'" value="카테고리 추가하기">
                 </div>
             </td>
-            <td>
-                <input type="button" class="btn btn-primary btn-sm" onclick="location.href='{% url 'productapp:categoryCreate' %}'" value="카테고리 추가하기">
-            </td>
         </tr>
-        <tr>
-        </tr>
-        <tr>
-            <td>
-                {{ forms.ProductCreationForm.as_table }}
-                {{ forms.ProductThumbnailCreationForm.as_table }}
-                {{ forms.ProductDetailImageCreationForm.as_table }}
-                {{ forms.ProductOptionCreationForm.as_table }}
-            </td>
-            <td>
-                <input type="hidden" name="category_code" id="category_code" value="">
-                <input class="btn btn-primary" type="submit" value="등록">
-            </td>
-        </tr>
+        {{ forms.ProductCreationForm.as_table }}
+        {{ forms.ProductThumbnailCreationForm.as_table }}
+        {{ forms.ProductDetailImageCreationForm.as_table }}
+        {{ forms.ProductOptionCreationForm.as_table }}
+
     </table>
+    <div>
+        <input type="hidden" name="category_code" id="category_code" value="">
+        <input class="btn btn-primary" type="submit" value="등록">
+    </div>
 </form>
 
 <script>

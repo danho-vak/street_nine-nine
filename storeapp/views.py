@@ -1,7 +1,7 @@
 from django.db.models import Q
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView
 
-from productapp.models import Product, ProductCategory
+from productapp.models import Product
 
 
 #  메인 화면 List View

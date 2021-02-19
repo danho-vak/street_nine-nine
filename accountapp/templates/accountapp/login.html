@@ -1,14 +1,140 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<div class="text-center" style="padding:10% 0 0 0;">
+<style>
+.form-signin {
+  width: 100%;
+  max-width: 420px;
+  padding: 15px;
+  margin: auto;
+}
+
+.form-label-group {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.form-label-group input,
+.form-label-group label {
+  height: 3.125rem;
+  padding: .75rem;
+}
+
+.form-label-group label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  width: 100%;
+  margin-bottom: 0; /* Override default `<label>` margin */
+  line-height: 1.5;
+  color: #495057;
+  pointer-events: none;
+  cursor: text; /* Match the input under the label */
+  border: 1px solid transparent;
+  border-radius: .25rem;
+  transition: all .1s ease-in-out;
+}
+
+.form-label-group input::-webkit-input-placeholder {
+  color: transparent;
+}
+
+.form-label-group input::-moz-placeholder {
+  color: transparent;
+}
+
+.form-label-group input:-ms-input-placeholder {
+  color: transparent;
+}
+
+.form-label-group input::-ms-input-placeholder {
+  color: transparent;
+}
+
+.form-label-group input::placeholder {
+  color: transparent;
+}
+
+.form-label-group input:not(:-moz-placeholder-shown) {
+  padding-top: 1.25rem;
+  padding-bottom: .25rem;
+}
+
+.form-label-group input:not(:-ms-input-placeholder) {
+  padding-top: 1.25rem;
+  padding-bottom: .25rem;
+}
+
+.form-label-group input:not(:placeholder-shown) {
+  padding-top: 1.25rem;
+  padding-bottom: .25rem;
+}
+
+.form-label-group input:not(:-moz-placeholder-shown) ~ label {
+  padding-top: .25rem;
+  padding-bottom: .25rem;
+  font-size: 12px;
+  color: #777;
+}
+
+.form-label-group input:not(:-ms-input-placeholder) ~ label {
+  padding-top: .25rem;
+  padding-bottom: .25rem;
+  font-size: 12px;
+  color: #777;
+}
+
+.form-label-group input:not(:placeholder-shown) ~ label {
+  padding-top: .25rem;
+  padding-bottom: .25rem;
+  font-size: 12px;
+  color: #777;
+}
+
+.form-label-group input:-webkit-autofill ~ label {
+  padding-top: .25rem;
+  padding-bottom: .25rem;
+  font-size: 12px;
+  color: #777;
+}
+
+/* Fallback for Edge
+-------------------------------------------------- */
+@supports (-ms-ime-align: auto) {
+  .form-label-group {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column-reverse;
+    flex-direction: column-reverse;
+  }
+
+  .form-label-group label {
+    position: static;
+  }
+
+  .form-label-group input::-ms-input-placeholder {
+    color: #777;
+  }
+}
+</style>
+
+<div style="padding:10% 0 0 0;">
     <form class="form-signin" action="" method="POST">
         {% csrf_token %}
-        <h1 class="h3 mb-3 font-weight-normal">로그인 해주세요!</h1>
-        <label for="id_username" class="sr-only">Email</label>
-        <input type="email" name="username" id="id_username" class="form-control" placeholder="Email" required autofocus>
-        <label for="id_password" class="sr-only">Password</label>
-        <input type="password" name="password" id="id_password" class="form-control" placeholder="Password" required>
+
+        <div class="text-center">
+            <h1 class="h3 mb-4 font-weight-normal">로그인 해주세요!</h1>
+        </div>
+
+        <div class="form-label-group">
+            <input type="email" name="username" id="id_username" class="form-control" placeholder="Email address" required autofocus>
+            <label for="id_username">Email</label>
+        </div>
+        <div class="form-label-group">
+            <input type="password" name="password" id="id_password" class="form-control" placeholder="Password" required>
+            <label for="id_password">Password</label>
+        </div>
         <button class="btn btn-lg btn-primary btn-block" type="submit">로그인</button>
         <button class="btn btn-lg btn-primary btn-block" type="button" onclick="location.href='{% url 'accountapp:create' %}'">회원가입</button>
     </form>

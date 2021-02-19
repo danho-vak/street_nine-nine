@@ -1,10 +1,8 @@
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
-from django.shortcuts import render, redirect
-from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
-from django.views.generic import ListView, UpdateView
+from django.views.generic import ListView
 
 from cartapp.decorator import cart_ownership
 from productapp.models import Product

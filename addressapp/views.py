@@ -6,7 +6,7 @@ from django.views.generic import CreateView, ListView, UpdateView, DeleteView
 from django.views.generic.edit import FormMixin
 
 from addressapp.decorator import address_ownership
-from addressapp.forms import AddressCreationForm, AddressDefaultUpdateFrom
+from addressapp.forms import AddressCreationForm
 from addressapp.models import UserAddress
 
 
