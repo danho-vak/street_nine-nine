@@ -1,9 +1,9 @@
 {% load static %}
 <div class="row">
     {% for item in product_list %}
-        <div class="col mx-4 my-4" style="max-width: 18rem;">
+        <div class="col mx-4 my-4" style="max-width: 14rem;">
             <a href="{% url 'productapp:detail' pk=item.pk %}">
-                <div class="card" style="width: 18rem; height:24rem;">
+                <div class="card" style="width: 14rem; height:20rem;">
                     <div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel">
                         <div class="carousel-inner">
                             {% for thumb in item.product_thumbnails.all %}
@@ -20,7 +20,6 @@
                             {% endfor %}
                         </div>
                     </div>
-<!--                    <img src="{{ item.product_thumbnails.first.p_thumbnail.url }}" class="card-img-top">-->
                     <div class="card-body">
                         <div class="card-text text-dark">
                             <b>{{ item.product_title }}</b>
@@ -32,50 +31,6 @@
         </div>
     {% endfor %}
 
-<!-- 이하 더미 코드 -->
-  <div class="col mx-4 my-4" style="max-width: 18rem;">
-    <div class="card" style="width: 18rem;">
-      <img src="{% static 'images/base/default_image.jpg' %}" class="card-img-top" alt="...">
-      <div class="card-body">
-        <p class="card-text text-dark">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-      </div>
-    </div>
-  </div>
 
-  <div class="col mx-4 my-4" style="max-width: 18rem;">
-    <div class="card" style="width: 18rem;">
-      <img src="{% static 'images/base/default_image.jpg' %}" class="card-img-top" alt="...">
-      <div class="card-body">
-        <p class="card-text text-dark">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="col mx-4 my-4" style="max-width: 18rem;">
-    <div class="card" style="width: 18rem;">
-      <img src="{% static 'images/base/default_image.jpg' %}" class="card-img-top" alt="...">
-      <div class="card-body">
-        <p class="card-text text-dark">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="col mx-4 my-4" style="max-width: 18rem;">
-    <div class="card" style="width: 18rem;">
-      <img src="{% static 'images/base/default_image.jpg' %}" class="card-img-top" alt="...">
-      <div class="card-body">
-        <p class="card-text text-dark">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="col mx-4 my-4" style="max-width: 18rem;">
-    <div class="card" style="width: 18rem;">
-      <img src="{% static 'images/base/default_image.jpg' %}" class="card-img-top" alt="...">
-      <div class="card-body">
-        <p class="card-text text-dark">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-      </div>
-    </div>
-  </div>
 
 </div>
