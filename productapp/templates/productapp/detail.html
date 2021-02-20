@@ -3,10 +3,12 @@
 {% load imagekit %}
 {% block content %}
 
+
+
 <table class="table text-center">
     <tr>
-        <td rowspan="9">
-            <div id="carouselExampleIndicators" class="carousel slide carousel-fade" data-ride="carousel">
+        <td id="carousel_container" rowspan="9">
+            <div id="carouselExampleIndicators" class="carousel slide carousel-fade w-75" data-ride="carousel">
                 <ol class="carousel-indicators">
                     {% for thumb in target_product.product_thumbnails.all %}
                         <li data-target="#carouselExampleIndicators" data-slide-to="{{ forloop.counter }}"></li>
@@ -77,6 +79,8 @@
         <td>
             {% if user.is_authenticated %}
                 <button class="btn btn-success" onclick="addCartItem();">장바구니에 추가</button>
+            {% else %}
+                <button class="btn btn-success" onclick="location.href='{% url 'accountapp:login' %}';">장바구니에 추가</button>
             {% endif %}
         </td>
     </tr>
@@ -88,26 +92,30 @@
         </td>
     </tr>
     <tr>
-        <td>
+        <td colspan="2">
             {{ target_product.product_description }}
         </td>
     </tr>
+    {% if user.is_admin %}
     <tr>
-        <td>
-            {% if user.is_admin %}
+        <td  colspan="2">
                 <button class="btn btn-warning" onclick="location.href='{% url 'productapp:update' pk=target_product.pk%}'">상품 수정하기</button>
                 <button class="btn btn-danger" onclick="location.href='{% url 'productapp:delete' pk=target_product.pk%}'">상품 삭제하기</button>
-            {% endif %}
         </td>
     </tr>
+    {% endif %}
 </table>
 
 <!-- include review -->
 <hr>
 
-{% include 'reviewapp/create.html'%}
+<div class="container" id="review_wrapper">
+    <script src="{% static 'js/auxiliary-rater-0831401/rater.min.js' %}"></script>
+    {% include 'reviewapp/create.html'%}
 
-{% include 'reviewapp/list.html' with review_list=target_product.review_set.all %}
+    {% include 'reviewapp/list.html' with review_list=target_product.review_set.all %}
+</div>
+
 <script src="{% static 'js/cartapp/cart.js' %}"></script>
 <script>
     $('.carousel-inner').children(':first-child').attr('class', 'carousel-item active');

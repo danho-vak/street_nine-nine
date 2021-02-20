@@ -1,9 +1,10 @@
-<nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-dark sidebar collapse">
+{% load static %}
+<nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-dark sidebar collapse shadow-lg">
     <div class="sidebar-sticky pt-3">
         <ul class="nav flex-column text-center">
             <li class="nav-item">
                 <a class="nav-link active" href="/">
-                    <h1 class="text-light">Street99<span class="sr-only">(current)</span></h1>
+                    <img src="{% static 'images/base/large_logo.png' %}" class="w-100 h-50">
                 </a>
             </li>
             <li class="nav-item px-1">
@@ -17,38 +18,38 @@
                 </form>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-light font-italic" href="#outerCollapse" data-toggle="collapse" aria-expanded="false" aria-controls="outerCollapse">Outer</a>
+                <a class="nav-link" href="#outerCollapse" data-toggle="collapse" aria-expanded="false" aria-controls="outerCollapse">Outer</a>
                 <div class="collapse" id="outerCollapse">
-                    <a class="nav-link text-light" href="{% url 'storeapp:searchByCategory' category_code=100 %}">전체</a>
-                    <a class="nav-link text-light" href="{% url 'storeapp:searchByCategory' category_code=101 %}">패딩</a>
-                    <a class="nav-link text-light" href="{% url 'storeapp:searchByCategory' category_code=102 %}">자켓/블레이져</a>
-                    <a class="nav-link text-light" href="{% url 'storeapp:searchByCategory' category_code=103 %}">MA-1/블루종</a>
+                    <a class="nav-link" href="{% url 'storeapp:searchByCategory' category_code=100 %}">전체</a>
+                    <a class="nav-link" href="{% url 'storeapp:searchByCategory' category_code=101 %}">패딩</a>
+                    <a class="nav-link" href="{% url 'storeapp:searchByCategory' category_code=102 %}">자켓/블레이져</a>
+                    <a class="nav-link" href="{% url 'storeapp:searchByCategory' category_code=103 %}">MA-1/블루종</a>
                 </div>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-light font-italic" href="#topCollapse" data-toggle="collapse" aria-expanded="false" aria-controls="topCollapse">Top</a>
-                <div class="collapse text-light" id="topCollapse">
-                    <a class="nav-link text-light" href="{% url 'storeapp:searchByCategory' category_code=200 %}">전체</a>
-                    <a class="nav-link text-light" href="{% url 'storeapp:searchByCategory' category_code=201 %}">티셔츠</a>
-                    <a class="nav-link text-light" href="{% url 'storeapp:searchByCategory' category_code=202 %}">맨투맨/후드</a>
-                    <a class="nav-link text-light" href="{% url 'storeapp:searchByCategory' category_code=203 %}">니트</a>
+                <a class="nav-link" href="#topCollapse" data-toggle="collapse" aria-expanded="false" aria-controls="topCollapse">Top</a>
+                <div class="collapse" id="topCollapse">
+                    <a class="nav-link" href="{% url 'storeapp:searchByCategory' category_code=200 %}">전체</a>
+                    <a class="nav-link" href="{% url 'storeapp:searchByCategory' category_code=201 %}">티셔츠</a>
+                    <a class="nav-link" href="{% url 'storeapp:searchByCategory' category_code=202 %}">맨투맨/후드</a>
+                    <a class="nav-link" href="{% url 'storeapp:searchByCategory' category_code=203 %}">니트</a>
                 </div>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-light font-italic" href="#bottomCollapse" data-toggle="collapse" aria-expanded="false" aria-controls="bottomCollapse">Bottom</a>
-                <div class="collapse text-light" id="bottomCollapse">
-                    <a class="nav-link text-light" href="{% url 'storeapp:searchByCategory' category_code=300 %}">전체</a>
-                    <a class="nav-link text-light" href="{% url 'storeapp:searchByCategory' category_code=301 %}">데님</a>
-                    <a class="nav-link text-light" href="{% url 'storeapp:searchByCategory' category_code=302 %}">슬랙스/코튼팬츠</a>
+                <a class="nav-link" href="#bottomCollapse" data-toggle="collapse" aria-expanded="false" aria-controls="bottomCollapse">Bottom</a>
+                <div class="collapse" id="bottomCollapse">
+                    <a class="nav-link" href="{% url 'storeapp:searchByCategory' category_code=300 %}">전체</a>
+                    <a class="nav-link" href="{% url 'storeapp:searchByCategory' category_code=301 %}">데님</a>
+                    <a class="nav-link" href="{% url 'storeapp:searchByCategory' category_code=302 %}">슬랙스/코튼팬츠</a>
                 </div>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-light font-italic" href="#accCollapse" data-toggle="collapse" aria-expanded="false" aria-controls="accCollapse">ACC</a>
-                <div class="collapse text-light" id="accCollapse">
-                    <a class="nav-link text-light" href="{% url 'storeapp:searchByCategory' category_code=400 %}">전체</a>
-                    <a class="nav-link text-light" href="{% url 'storeapp:searchByCategory' category_code=401 %}">가방</a>
-                    <a class="nav-link text-light" href="{% url 'storeapp:searchByCategory' category_code=402 %}">벨트</a>
-                    <a class="nav-link text-light" href="{% url 'storeapp:searchByCategory' category_code=403 %}">언더웨어/양말</a>
+                <a class="nav-link" href="#accCollapse" data-toggle="collapse" aria-expanded="false" aria-controls="accCollapse">ACC</a>
+                <div class="collapse" id="accCollapse">
+                    <a class="nav-link" href="{% url 'storeapp:searchByCategory' category_code=400 %}">전체</a>
+                    <a class="nav-link" href="{% url 'storeapp:searchByCategory' category_code=401 %}">가방</a>
+                    <a class="nav-link" href="{% url 'storeapp:searchByCategory' category_code=402 %}">벨트</a>
+                    <a class="nav-link" href="{% url 'storeapp:searchByCategory' category_code=403 %}">언더웨어/양말</a>
                 </div>
             </li>
         </ul>
@@ -57,7 +58,7 @@
 
         <h6 class="sidebar-heading text-center px-3 mt-4 mb-1 text-muted">
             {% if user.is_authenticated %}
-                <span>반가워요! {{ user.username }}님!</span>
+                <span>반가워요!{{ user.username }}님!</span>
             {% else %}
                 <span>로그인 해주세요!</span>
             {% endif %}
@@ -66,17 +67,20 @@
         <ul class="nav flex-column mb-2 text-center">
             {% if user.is_authenticated %}
                 <li class="nav-item">
-                    <a class="nav-link text-light font-italic" href="{% url 'accountapp:logout' %}">logout</a>
+                    <a class="nav-link" href="{% url 'accountapp:profile' pk=user.pk %}">내 정보</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-light font-italic" href="{% url 'cartapp:list' %}">장바구니</a>
+                    <a class="nav-link" href="{% url 'accountapp:logout' %}">logout</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-light font-italic" href="{% url 'orderapp:orderList' %}">주문내역</a>
+                    <a class="nav-link" href="{% url 'cartapp:list' %}">장바구니</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'orderapp:orderList' %}">주문내역</a>
                 </li>
             {% else %}
                 <li class="nav-item">
-                    <a class="nav-link text-light font-italic" href="{% url 'accountapp:login' %}">login</a>
+                    <a class="nav-link" href="{% url 'accountapp:login' %}">login</a>
                 </li>
             {% endif %}
         </ul>
@@ -88,9 +92,21 @@
         </h6>
         <ul class="nav flex-column mb-2 text-center">
             <li class="nav-item">
-                <a class="nav-link text-light font-italic" href="{% url 'productapp:create' %}">상품등록</a>
+                <a class="nav-link" href="{% url 'productapp:create' %}">상품등록</a>
             </li>
         </ul>
         {% endif %}
     </div>
 </nav>
+
+<style>
+    li > .nav-link {
+        color : #f8f9fa !important;
+        font-size : 1.2rem;
+    }
+
+    div > .nav-link {
+        color : #f8f9fa !important;
+        font-size : 0.7rem;
+    }
+</style>

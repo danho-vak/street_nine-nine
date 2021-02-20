@@ -2,13 +2,12 @@
 <div class="row">
     {% for item in product_list %}
         <div class="col mx-4 my-4" style="max-width: 14rem;">
-            <a href="{% url 'productapp:detail' pk=item.pk %}">
+            <a href="{% url 'productapp:detail' pk=item.pk %}" class="card-link">
                 <div class="card" style="width: 14rem; height:20rem;">
                     <div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel">
                         <div class="carousel-inner">
                             {% for thumb in item.product_thumbnails.all %}
                                 {% if thumb == item.product_thumbnails.first %}
-                                    True
                                     <div class="carousel-item active">
                                         <img src="{{ thumb.p_thumbnail.url }}" class="card-img-top d-block w-100 h-100">
                                     </div>

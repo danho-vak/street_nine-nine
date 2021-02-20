@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block content %}
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
@@ -9,7 +9,7 @@
                 <label for="product_category_container">상품 카테고리:</label>
             </th>
             <td>
-                <div id="product_category_container" class="d-flex">
+                <div id="product_category_container" class="d-flex w-75">
                     <input class="form-control form-control-sm" type="text" id="category_code_disabled" disabled size="5">
                     <select class="form-control form-control-sm" id="category_select" required>
                         <option value="">선택 없음</option>
@@ -30,45 +30,11 @@
     </div>
 </form>
 
+<script src="{% static 'js/productapp/product_create.js' %}"></script>
 <script>
-    // submit시 disabled 속성 지우는 script
-    $('form').submit(function(e){
-        $(':disabled').each(function(e){
-            $(this).removeAttr('disabled');
-        })
-    });
-
-    // 상품 option 등록시 정규표현식을 통해 세미콜론만 받을 수 있도록 걸러내는 script
-    $('#id_p_product_option_class_2').keyup(function(e) {
-        var optionValueCheck = /[~!@\#$%^&*\()\-=+_'\[\]{}]/gi;
-        var optionVal = $("#id_p_product_option_class_2");
-
-        if (optionValueCheck.test(optionVal.val())) {
-            optionVal.val(optionVal.val().replace(optionValueCheck,""));
-        }
-    });
-
-    // product_sale_id를 조합해주는 script
-    $('#id_product_code').blur(function(e){
-        $('#id_product_sale_id').val($('#id_product_id').val() + $('#id_product_code').val());
-    });
-
     data = {{ category_list | safe }};
 
-    set_category(data.filter(obj => obj.category_parent_id == null), 'category_select'); // 대분류 카테고리 설정
-
-    function set_category(data, target_object){
-
-        for (var i=0; i<data.length; i++){
-            $('#'+target_object).append('<option value='+data[i].category_code+'>'+data[i].category_name+'</option>');
-        }
-    }
-
-    $('#category_select').change(function(){
-        category_name = $('#category_select').find(':selected').text();
-        $('#category_code_disabled').val(this.value);
-        $('#category_code').val(this.value);
-    });
-
+    // product_create.js에 아래 함수 정의되어있음
+    set_category(data.filter(obj => obj.category_parent_id == null), 'category_select'); // 카테고리 select option 초기화
 </script>
 {% endblock %}

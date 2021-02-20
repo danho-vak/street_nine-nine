@@ -2,12 +2,16 @@
 {% load static %}
 
 {% block content %}
-    {% include 'addressapp/snippets/address_list.html' %}
-    <button class="btn btn-primary" onclick="setDefaultAddress();">기본 배송지 변경하기</button>
-    <button class="btn btn-secondary" onclick="deleteAddress();">배송지 삭제하기</button>
+    <div id="address_list_wrapper" class="pb-4">
+        {% include 'addressapp/snippets/address_list.html' %}
+        <button class="btn btn-primary" onclick="setDefaultAddress();">기본 배송지 변경하기</button>
+        <button class="btn btn-secondary" onclick="deleteAddress();">배송지 삭제하기</button>
+    </div>
 
-    <!-- load address.js -->
-    <script src="{% static 'js/addressapp/address.js' %}"></script>
-    <hr>
-    {% include 'addressapp/create.html' %}
+    <!--  list, create 로직에 필요한 js는 create.html에 있음  -->
+
+    <div id="address_create_wrapper">
+        {% include 'addressapp/create.html' %}
+    </div>
+
 {% endblock %}

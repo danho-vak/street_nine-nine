@@ -13,11 +13,20 @@
         </div>
         <div class="col-md-8">
             <div class="card-body">
-                <p class="card-text">{{ review.content }}</p>
-                <p class="card-text"><small class="text-muted">{{ review.product_rate }}</small></p>
+                <p class="card-text mb-0">{{ review.content }}</p>
+                <div class="card-text">
+                    <div id="review_list_rating_{{ review.pk }}" class="rating" style="font-size:2rem;"></div>
+                </div>
                 <p class="card-text"><small class="text-muted">{{ review.created_at }}</small></p>
             </div>
         </div>
     </div>
 </div>
+<script>
+    var list_options = {
+        initial_value: {{ review.product_rate }},
+        readonly: true,
+    }
+    $("#review_list_rating_{{ review.pk }}").rate(list_options);
+</script>
 {% endfor %}

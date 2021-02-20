@@ -10,12 +10,12 @@ class Product(models.Model):
                                          on_delete=models.SET_NULL,
                                          null=True,
                                          verbose_name='product_category')
-    product_id = models.CharField(max_length=10, null=False, blank=False, unique=True)                       # 판매자가 부여한 제품의 ID
+    product_id = models.CharField(max_length=10, null=False, blank=False, unique=True)          # 판매자가 부여한 제품의 ID
     product_code = models.CharField(max_length=10, null=False, blank=False)                     # 상품의 옵션에 따른 판매자가 부여한 상품의 고유 CODE
     product_sale_id = models.CharField(max_length=10, null=False, blank=False, unique=True)     # 상품의 ID + CODE로 조합된 판매코드(파생 컬럼으로 사용 예정)
     product_title = models.CharField(max_length=100, null=False, blank=False)                   # 상품 명
-    product_origin_price = models.IntegerField(null=False, blank=False)                         # 상품 원가
-    product_sale_price = models.IntegerField(null=False, blank=False)                           # 상품 실제 판매 가격(파생 컬럼으로 사용 예정)
+    product_origin_price = models.PositiveIntegerField(null=False, blank=False, default=0)      # 상품 원가
+    product_sale_price = models.PositiveIntegerField(null=False, blank=False, default=0)        # 상품 실제 판매 가격(파생 컬럼으로 사용 예정)
     product_description = models.CharField(max_length=200, null=False, blank=False)             # 상품 설명
     product_is_display = models.BooleanField(default=True)                                      # 상품 전시 여부
     product_created_at = models.DateTimeField(auto_now_add=True)                                # 상품 등록 일자

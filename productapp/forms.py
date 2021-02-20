@@ -28,7 +28,7 @@ class ProductCreationForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(ProductCreationForm, self).__init__(*args, **kwargs)
         for field_name in self.fields:
-            self.fields[field_name].widget.attrs.update({'class': 'form-control form-control-sm'})
+            self.fields[field_name].widget.attrs.update({'class': 'form-control form-control-sm w-25'})
         self.fields['product_sale_id'].widget.attrs.update({'disabled': 'disabled'})
         self.fields['product_is_display'].widget.attrs.update({'class': ''})
 
@@ -84,4 +84,4 @@ class ProductOptionCreationForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(ProductOptionCreationForm, self).__init__(*args, **kwargs)
         for field_name in self.fields:
-            self.fields[field_name].widget.attrs.update({'class': 'form-control form-control-sm'})
+            self.fields[field_name].widget.attrs.update({'class': 'form-control form-control-sm w-50'})
